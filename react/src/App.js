@@ -52,7 +52,7 @@ function Document() {
     {"size": "heading2", "text": "Example"},
     {"size": "paragraph", "text": "Some paragraph text"},
     {"size": "paragraph", "text": "More paragraph text"},
-    {"size": "heading1", "text": "Heading1"}
+    {"size": "heading1", "text": "Awesome demo 🙌"}
   ]);
 
   return (
@@ -63,8 +63,8 @@ function Document() {
 
       {/* Body */}
       {
-        textBoxes.map(box => {
-          return <TextBox size={box.size} text={box.text}
+        textBoxes.map((box, index) => {
+          return <TextBox index={index} size={box.size} text={box.text}
                   textBoxes={textBoxes} setTextBoxes={setTextBoxes} />;
         })
       }
@@ -80,11 +80,6 @@ function TextBox(props) {
   // Control side handle visibility with mouse position
   const [isHovering, setIsHovering] = useState(false);
   const mousePos = useMousePosition();
-
-  // Focus on new blocks
-  const focusOnMount = useRef(null);
-  useEffect(() => { focusOnMount.current.focus(); }, []);
-
 
   return <div className="textbox"
       
@@ -103,20 +98,34 @@ function TextBox(props) {
     : null }
 
     {/* Input */}
-    <input type="text" defaultValue={props.text}
-      style={{ 
-        fontSize: FONTS[props.size].size,
-        fontWeight: FONTS[props.size].weight,
-      }} 
-
-      // Placeholder
-      onBlur={e => controlPlaceholder(false, e.target, FONTS[props.size].placeholder)}
-      onFocus={e => controlPlaceholder(true, e.target, FONTS[props.size].placeholder)}
-      onChange={e => controlPlaceholder(true, e.target, FONTS[props.size].placeholder)}
-      ref={focusOnMount}
-    />
+    <InputBox size={props.size} text={props.text} index={props.index} 
+      textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} />
 
   </div>
+}
+
+function InputBox(props) {
+
+  // Focus on new blocks
+  const focusOnMount = useRef(null);
+  useEffect(() => { focusOnMount.current.focus(); }, []);
+
+  return <input type="text" defaultValue={props.text}
+    style={{ 
+      fontSize: FONTS[props.size].size,
+      fontWeight: FONTS[props.size].weight,
+    }} 
+
+    // Placeholder
+    onBlur={e => controlPlaceholder(false, e.target, FONTS[props.size].placeholder)}
+    onFocus={e => controlPlaceholder(true, e.target, FONTS[props.size].placeholder)}
+    onChange={e => controlPlaceholder(true, e.target, FONTS[props.size].placeholder)}
+    ref={focusOnMount}
+
+    // New block
+    onKeyDown={e => handleKeyPress(e, props.textBoxes, props.setTextBoxes, props.index)}
+  />
+
 }
 
 function BlockSideHandle(props) {
@@ -151,11 +160,17 @@ function useMousePosition() {
   return position;
 }
 
-/** Adds a new block. I will not implement delete. */
+/** Adds a new block */
 function addTextBox(textBoxes, setTextBoxes) {
   const tmp = [...textBoxes];
   tmp.push({"size": "paragraph", "text": ""});
-  console.log(tmp);
+  setTextBoxes(tmp);
+}
+
+/** Delete an existing block */
+function deleteTextBox(textBoxes, setTextBoxes, index) {
+  const tmp = [...textBoxes];
+  tmp.splice(index, 1);
   setTextBoxes(tmp);
 }
 
@@ -178,6 +193,16 @@ function controlSideHandle(el, mousePos, setIsHovering) {
                 mousePos.x < rect.left + rect.width + MOUSE_HOVER_OFFSET &&
                 mousePos.y > rect.top &&
                 mousePos.y < rect.top + rect.height);
+}
+
+/** Handles special key pressed at input box */
+function handleKeyPress(e, textBoxes, setTextBoxes, index) {
+  if (e.key === "Enter") { 
+    addTextBox(textBoxes, setTextBoxes);
+  }
+  else if (e.key === "Backspace" && e.target.value === "") {
+    deleteTextBox(textBoxes, setTextBoxes, index);
+  }
 }
 
 

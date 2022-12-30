@@ -72,7 +72,7 @@
                 Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-.textbox input::placeholder { color: #D7D7D6; }
+.textbox input::placeholder { color: #b4b4b4; }
 
 /* BlockSideHandle */
 
