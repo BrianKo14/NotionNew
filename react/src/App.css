@@ -18,6 +18,9 @@
 
   position: fixed;
   top: 0;
+
+	user-select: none;
+  pointer-events: none;
 }
 
 #navigation-bar img { height: 45px; }
@@ -43,6 +46,7 @@
   float: left;
   border-radius: 3px;
   cursor: pointer;
+	user-select: none;
 }
 
 #page-icon:hover { background-color: rgba(0, 0, 0, 0.062); }
@@ -82,6 +86,7 @@
   height: 100%;
   top: 65%;
   transform: translateY(-50%);
+	user-select: none;
 }
 
 .block-side-handle img {

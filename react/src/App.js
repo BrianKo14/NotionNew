@@ -143,8 +143,6 @@ function InputBox(props) {
     // Deselects this block
     onBlur={e => {
       controlPlaceholder(false, e.target, FONTS[props.size].placeholder);
-
-      // toggleMenu(false, props.setShowMenu);
     }}
 
     // Selects this block
@@ -153,6 +151,8 @@ function InputBox(props) {
 
       selectedIndex = props.index;
       positionFromTop = e.target.getBoundingClientRect().top / window.innerHeight;
+
+      toggleMenu(false, props.setShowMenu);
     }}
 
     onChange={e => {
