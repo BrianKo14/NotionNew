@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 import static_navigationbar_right from './media/static-navigationbar-right.png';
 import static_navigationbar_left from './media/static-navigationbar-left.png';
@@ -8,6 +8,7 @@ import add_button from './media/add-button.png';
 import drag_button from './media/drag-button.png';
 
 import './App.css';
+import Menu from './Menu';
 
 const FONTS = {
   'paragraph': {'size': '16px', 'weight': 'normal', 'margin': '0px', 'placeholder': "Type '/' for commands"},
@@ -19,7 +20,16 @@ const FONTS = {
 
 const MOUSE_HOVER_OFFSET = 120;
 
-var selectedBlock = 4;
+/** The index for the block that is currently selected. */
+var selectedIndex = 4;
+
+/** The height position of the cursor as a percentage of the screen height.
+ * Used to flip menu when it's too close to the top. */
+var positionFromTop = 0;
+
+/** Buffer stores scroll value when page-wide scroll gets blocked.
+ * Used when showing menu. */
+var lastScrollValue = [0, 0];
 
 
 /* APP */
@@ -57,26 +67,26 @@ function Document() {
     {"size": "paragraph", "text": "More paragraph text. Lorem ipsum blah blah blah."},
     {"size": "heading1", "text": "Awesome demo 🙌"}
   ]);
+  
+  const [showMenu, setShowMenu] = useState(false);
 
   // Update selection when textBoxes is updated
   useEffect(() => {
-    const newSelection = document.querySelectorAll(".textbox")[selectedBlock].querySelector("input");
-    newSelection.focus();
+    const selectedBlock = document.querySelectorAll(".textbox")[selectedIndex].querySelector("input");
+    selectedBlock.focus();
   }, [textBoxes]);
 
   return (
     <div id="document">
       {/* Header */}
       <img id="page-icon" src={page_icon} />
-      {/* <TextBox index={0} size="title" text="Job Application Projects" /> */}
 
-      {/* Body */}
-      {
+      {/* Body */} {
         textBoxes.map((box, index) => {
           return <TextBox index={index} size={box.size} text={box.text}
-                          textBoxes={textBoxes} setTextBoxes={setTextBoxes} />;
-        })
-      }
+                          textBoxes={textBoxes} setTextBoxes={setTextBoxes}
+                          showMenu={showMenu} setShowMenu={setShowMenu} />;
+        }) }
     </div>
   );
 }
@@ -108,7 +118,13 @@ function TextBox(props) {
 
     {/* Input */}
     <InputBox size={props.size} text={props.text} index={props.index} 
-      textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} />
+      textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes}
+      setShowMenu={props.setShowMenu} />
+
+    {/* Menu */}
+    { props.showMenu && props.index === selectedIndex ? 
+      <Menu setShowMenu={props.setShowMenu} positionFromTop={positionFromTop} />
+    : null }
 
   </div>
 }
@@ -125,19 +141,30 @@ function InputBox(props) {
     }} 
 
     // Deselects this block
-    onBlur={e => controlPlaceholder(false, e.target, FONTS[props.size].placeholder)}
+    onBlur={e => {
+      controlPlaceholder(false, e.target, FONTS[props.size].placeholder);
+
+      // toggleMenu(false, props.setShowMenu);
+    }}
 
     // Selects this block
     onFocus={e => {
       controlPlaceholder(true, e.target, FONTS[props.size].placeholder);
-      selectedBlock = props.index;
+
+      selectedIndex = props.index;
+      positionFromTop = e.target.getBoundingClientRect().top / window.innerHeight;
     }}
 
     onChange={e => {
       controlPlaceholder(true, e.target, FONTS[props.size].placeholder);
+
+      // Update text in state
       const tmp = [...props.textBoxes];
       tmp[props.index].text = e.target.value;
       props.setTextBoxes(tmp);
+
+      // Show menu if user types '/'
+      toggleMenu(e.target.value[0] === '/', props.setShowMenu);
     }}
 
     onKeyDown={e => handleKeyPress(e, props.textBoxes, props.setTextBoxes, props.index)}
@@ -163,7 +190,7 @@ function addTextBox(textBoxes, setTextBoxes, index) {
   tmp.splice(index + 1, 0, {"size": "paragraph", "text": ""})
   setTextBoxes(tmp);
 
-  selectedBlock = index + 1;
+  selectedIndex = index + 1;
 }
 
 /** Delete an existing block */
@@ -174,7 +201,7 @@ function deleteTextBox(textBoxes, setTextBoxes, index) {
   tmp.splice(index, 1);
   setTextBoxes(tmp);
 
-  selectedBlock = index - 1;
+  selectedIndex = index - 1;
 }
 
 /**
@@ -198,6 +225,19 @@ function controlSideHandle(el, mousePos, setIsHovering) {
                 mousePos.x < rect.left + rect.width + MOUSE_HOVER_OFFSET &&
                 mousePos.y > rect.top &&
                 mousePos.y < rect.top + rect.height);
+}
+
+function toggleMenu(show, setShowMenu) {
+  setShowMenu(show);
+
+  if (show) {
+    // Disable scrolling
+    const x = window.scrollX, y = window.scrollY;
+    window.onscroll= () => window.scrollTo(x, y);
+  } else {
+    // Enable scrolling
+    window.onscroll = null;
+  }
 }
 
 /** Handles specific keys pressed at input box */

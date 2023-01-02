@@ -1,0 +1,61 @@
+{
+	"Basic blocks": [
+		{
+			"name": "Text",
+			"description": "Just start writing with plain text.",
+			"icon": "text.png"
+		},
+		{
+			"name": "Page",
+			"description": "Embed a sub-page inside this page.",
+			"icon": "page.png"
+		},
+		{
+			"name": "To-do list",
+			"description": "Track tasks with a to-do list.",
+			"icon": "todo.png"
+		},
+		{
+			"name": "Heading 1",
+			"description": "Big section heading.",
+			"icon": "heading1.png"
+		},
+		{
+			"name": "Heading 2",
+			"description": "Medium section heading.",
+			"icon": "heading2.png"
+		},
+		{
+			"name": "Heading 3",
+			"description": "Small section heading.",
+			"icon": "heading3.png"
+		},
+		{
+			"name": "Table",
+			"description": "Add simple tabular content to your page.",
+			"icon": "table.png"
+		},
+		{
+			"name": "Bulleted list",
+			"description": "Create a simple bulleted list.",
+			"icon": "bulleted.png"
+		},
+		{
+			"name": "Numbered list",
+			"description": "Create a list with numbering.",
+			"icon": "numbered.png"
+		},
+		{
+			"name": "Toggle list",
+			"description": "Toggles can hide and show content inside.",
+			"icon": "toggle.png"
+		}
+	],
+	"New features": [
+		{
+			"name": "Drawing",
+			"description": "Draw with your phone!",
+			"icon": "drawing.png"
+		}
+	]
+}
