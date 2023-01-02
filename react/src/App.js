@@ -10,7 +10,7 @@ import drag_button from './media/drag-button.png';
 import './App.css';
 
 const FONTS = {
-  'paragraph': {'size': '16px', 'weight': 'normal', 'margin': '0px', 'placeholder': 'Type "/" for commands'},
+  'paragraph': {'size': '16px', 'weight': 'normal', 'margin': '0px', 'placeholder': "Type '/' for commands"},
   'heading1': {'size': '1.875em', 'weight': '600', 'margin': '2em', 'placeholder': "Heading 1"},
   'heading2': {'size': '1.5em', 'weight': '600', 'margin': '1.8em', 'placeholder': "Heading 2"},
   'heading3': {'size': '1.25em', 'weight': '600', 'margin': '1em', 'placeholder': "Heading 3"},
@@ -18,6 +18,8 @@ const FONTS = {
 };
 
 const MOUSE_HOVER_OFFSET = 120;
+
+var selectedBlock = 4;
 
 
 /* APP */
@@ -49,23 +51,30 @@ function NavigationBar() {
 function Document() {
   
   const [textBoxes, setTextBoxes] = useState([
+    {"size": "title", "text": "Job Application Projects"},
     {"size": "heading2", "text": "Example"},
     {"size": "paragraph", "text": "Some paragraph text"},
-    {"size": "paragraph", "text": "More paragraph text"},
+    {"size": "paragraph", "text": "More paragraph text. Lorem ipsum blah blah blah."},
     {"size": "heading1", "text": "Awesome demo 🙌"}
   ]);
+
+  // Update selection when textBoxes is updated
+  useEffect(() => {
+    const newSelection = document.querySelectorAll(".textbox")[selectedBlock].querySelector("input");
+    newSelection.focus();
+  }, [textBoxes]);
 
   return (
     <div id="document">
       {/* Header */}
       <img id="page-icon" src={page_icon} />
-      <TextBox size="title" text="Job Application Projects" />
+      {/* <TextBox index={0} size="title" text="Job Application Projects" /> */}
 
       {/* Body */}
       {
         textBoxes.map((box, index) => {
           return <TextBox index={index} size={box.size} text={box.text}
-                  textBoxes={textBoxes} setTextBoxes={setTextBoxes} />;
+                          textBoxes={textBoxes} setTextBoxes={setTextBoxes} />;
         })
       }
     </div>
@@ -94,7 +103,7 @@ function TextBox(props) {
 
     {/* Side handle */}
     { isHovering && props.size !== "title" ? 
-      <BlockSideHandle textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} />
+      <BlockSideHandle textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} index={props.index} />
     : null }
 
     {/* Input */}
@@ -106,23 +115,31 @@ function TextBox(props) {
 
 function InputBox(props) {
 
-  // Focus on new blocks
-  const focusOnMount = useRef(null);
-  useEffect(() => { focusOnMount.current.focus(); }, []);
+  return <input type="text"
+  
+    value={props.text}
 
-  return <input type="text" defaultValue={props.text}
     style={{ 
       fontSize: FONTS[props.size].size,
       fontWeight: FONTS[props.size].weight,
     }} 
 
-    // Placeholder
+    // Deselects this block
     onBlur={e => controlPlaceholder(false, e.target, FONTS[props.size].placeholder)}
-    onFocus={e => controlPlaceholder(true, e.target, FONTS[props.size].placeholder)}
-    onChange={e => controlPlaceholder(true, e.target, FONTS[props.size].placeholder)}
-    ref={focusOnMount}
 
-    // New block
+    // Selects this block
+    onFocus={e => {
+      controlPlaceholder(true, e.target, FONTS[props.size].placeholder);
+      selectedBlock = props.index;
+    }}
+
+    onChange={e => {
+      controlPlaceholder(true, e.target, FONTS[props.size].placeholder);
+      const tmp = [...props.textBoxes];
+      tmp[props.index].text = e.target.value;
+      props.setTextBoxes(tmp);
+    }}
+
     onKeyDown={e => handleKeyPress(e, props.textBoxes, props.setTextBoxes, props.index)}
   />
 
@@ -131,7 +148,7 @@ function InputBox(props) {
 function BlockSideHandle(props) {
   return (
     <div className="block-side-handle">
-      <img src={add_button} onClick={() => addTextBox(props.textBoxes, props.setTextBoxes)} />
+      <img src={add_button} onClick={() => addTextBox(props.textBoxes, props.setTextBoxes, props.index)} />
       <img src={drag_button} />
     </div>
   );
@@ -139,6 +156,60 @@ function BlockSideHandle(props) {
 
 
 /* AUXILIARIES */
+
+/** Adds a new block */
+function addTextBox(textBoxes, setTextBoxes, index) {
+  const tmp = [...textBoxes];
+  tmp.splice(index + 1, 0, {"size": "paragraph", "text": ""})
+  setTextBoxes(tmp);
+
+  selectedBlock = index + 1;
+}
+
+/** Delete an existing block */
+function deleteTextBox(textBoxes, setTextBoxes, index) {
+  if (textBoxes.length === 2) return;
+
+  const tmp = [...textBoxes];
+  tmp.splice(index, 1);
+  setTextBoxes(tmp);
+
+  selectedBlock = index - 1;
+}
+
+/**
+ * Controls the placeholder of the input textbox.
+ * For paragraphs: it shows only when empty and selected.
+ * For headings: it shows always when empty.
+*/
+function controlPlaceholder(selected, target, placeholder) {
+  if (selected && target.value === "") {
+    target.placeholder = placeholder;
+  } else if (!placeholder.includes("Heading")) {
+    target.placeholder = "";
+  } else {
+    target.placeholder = "Type '/' for commands";
+  }
+}
+
+function controlSideHandle(el, mousePos, setIsHovering) {
+  const rect = el.getBoundingClientRect();
+  setIsHovering(mousePos.x > rect.left - MOUSE_HOVER_OFFSET &&
+                mousePos.x < rect.left + rect.width + MOUSE_HOVER_OFFSET &&
+                mousePos.y > rect.top &&
+                mousePos.y < rect.top + rect.height);
+}
+
+/** Handles specific keys pressed at input box */
+function handleKeyPress(e, textBoxes, setTextBoxes, index) {
+  if (e.key === "Enter" && e.target.selectionEnd === e.target.value.length) { 
+    addTextBox(textBoxes, setTextBoxes, index);
+  }
+  else if (e.key === "Backspace" && e.target.value === "" && index !== 0) {
+    e.preventDefault();
+    deleteTextBox(textBoxes, setTextBoxes, index);
+  }
+}
 
 /** Gets mouse position to detect hovering for the BlockSideHandle.
  * By doing this in JS instead of CSS I can easily add an artifical offset to the hover area. */
@@ -158,51 +229,6 @@ function useMousePosition() {
   }, []);
 
   return position;
-}
-
-/** Adds a new block */
-function addTextBox(textBoxes, setTextBoxes) {
-  const tmp = [...textBoxes];
-  tmp.push({"size": "paragraph", "text": ""});
-  setTextBoxes(tmp);
-}
-
-/** Delete an existing block */
-function deleteTextBox(textBoxes, setTextBoxes, index) {
-  const tmp = [...textBoxes];
-  tmp.splice(index, 1);
-  setTextBoxes(tmp);
-}
-
-/**
- * Controls the placeholder of the input textbox.
- * For paragraphs: it shows only when empty and selected.
- * For headings: it shows always when empty.
-*/
-function controlPlaceholder(selected, target, placeholder) {
-  if (selected && target.value === "") {
-    target.placeholder = placeholder;
-  } else if (!placeholder.includes("Heading")) {
-    target.placeholder = "";
-  }
-}
-
-function controlSideHandle(el, mousePos, setIsHovering) {
-  const rect = el.getBoundingClientRect();
-  setIsHovering(mousePos.x > rect.left - MOUSE_HOVER_OFFSET &&
-                mousePos.x < rect.left + rect.width + MOUSE_HOVER_OFFSET &&
-                mousePos.y > rect.top &&
-                mousePos.y < rect.top + rect.height);
-}
-
-/** Handles special key pressed at input box */
-function handleKeyPress(e, textBoxes, setTextBoxes, index) {
-  if (e.key === "Enter") { 
-    addTextBox(textBoxes, setTextBoxes);
-  }
-  else if (e.key === "Backspace" && e.target.value === "") {
-    deleteTextBox(textBoxes, setTextBoxes, index);
-  }
 }
 
 
