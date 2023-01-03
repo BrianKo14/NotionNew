@@ -27,10 +27,6 @@ var selectedIndex = 4;
  * Used to flip menu when it's too close to the top. */
 var positionFromTop = 0;
 
-/** Buffer stores scroll value when page-wide scroll gets blocked.
- * Used when showing menu. */
-var lastScrollValue = [0, 0];
-
 
 /* APP */
 
