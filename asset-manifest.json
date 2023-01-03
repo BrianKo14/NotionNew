@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/NotionNew/static/css/main.5799bb0e.css",
-    "main.js": "/NotionNew/static/js/main.0d47c301.js",
-    "static/media/page-icon.png": "/NotionNew/static/media/page-icon.000a226d57a7c743c454.png",
-    "static/media/static-navigationbar-left.png": "/NotionNew/static/media/static-navigationbar-left.cca7e8722dab7bd705e3.png",
-    "static/media/static-navigationbar-right.png": "/NotionNew/static/media/static-navigationbar-right.5b26004b33fc62d0a1b5.png",
-    "index.html": "/NotionNew/index.html",
-    "main.5799bb0e.css.map": "/NotionNew/static/css/main.5799bb0e.css.map",
-    "main.0d47c301.js.map": "/NotionNew/static/js/main.0d47c301.js.map"
+    "main.css": "/static/css/main.5799bb0e.css",
+    "main.js": "/static/js/main.ef80e3f9.js",
+    "static/media/page-icon.png": "/static/media/page-icon.000a226d57a7c743c454.png",
+    "static/media/static-navigationbar-left.png": "/static/media/static-navigationbar-left.cca7e8722dab7bd705e3.png",
+    "static/media/static-navigationbar-right.png": "/static/media/static-navigationbar-right.5b26004b33fc62d0a1b5.png",
+    "index.html": "/index.html",
+    "main.5799bb0e.css.map": "/static/css/main.5799bb0e.css.map",
+    "main.ef80e3f9.js.map": "/static/js/main.ef80e3f9.js.map"
   },
   "entrypoints": [
     "static/css/main.5799bb0e.css",
-    "static/js/main.0d47c301.js"
+    "static/js/main.ef80e3f9.js"
   ]
 }
