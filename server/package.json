@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "build": "zip -rq server.zip . -x \".gitignore\" -x \"*/.DS_Store\" -x \"node_modules/*\""
   },
   "author": "",
   "license": "ISC",
