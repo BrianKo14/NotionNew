@@ -3,17 +3,28 @@ import { useState, useEffect } from 'react';
 
 import './css/QRWindow.css';
 import QRCode from 'qrcode';
+import { getUniqueID } from './client';
 
 function QRWindow(props) {
-
-	const url = `http://notionnew.us-east-1.elasticbeanstalk.com/drawing?user=0`;
 
 	const [qrCodeDataUri, setQRCodeDataUri] = useState('');
 
 	useEffect(() => {
-		QRCode.toDataURL(url, { width: 256, height: 256 })
-		.then(dataUri => setQRCodeDataUri(dataUri) )
-		.catch(err => console.error(err) );
+		async function generateQRCode() {
+
+			const uniqueID = await getUniqueID();
+			const url = `http://notionnew.us-east-1.elasticbeanstalk.com/drawing?user=${uniqueID}`;
+			console.log(url); // FIXME: makes two requests to server
+
+			try {
+				const dataUri = await QRCode.toDataURL(url, { width: 256, height: 256 });
+				setQRCodeDataUri(dataUri);
+			} catch (error) {
+				console.error(error);
+			}
+		}
+
+		generateQRCode();
 	}, []);
 	
 	return (

@@ -160,7 +160,7 @@ function InputBox(props) {
 
       toggleMenu(false, props.setShowMenu);
 
-      props.setShowQR(false); // FIXME: disappears on click
+      props.setShowQR(false);
     }}
 
     onChange={e => {
