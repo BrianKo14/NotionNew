@@ -1,4 +1,12 @@
 {
+	"New features": [
+		{
+			"name": "Drawing",
+			"description": "Draw with your phone!",
+			"icon": "drawing.png",
+			"onclick": "generateQR"
+		}
+	],
 	"Basic blocks": [
 		{
 			"name": "Text",
@@ -49,13 +57,6 @@
 			"name": "Toggle list",
 			"description": "Toggles can hide and show content inside.",
 			"icon": "toggle.png"
-		}
-	],
-	"New features": [
-		{
-			"name": "Drawing",
-			"description": "Draw with your phone!",
-			"icon": "drawing.png"
 		}
 	]
 }

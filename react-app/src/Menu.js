@@ -1,5 +1,5 @@
 
-import './Menu.css';
+import './css/Menu.css';
 
 import BLOCKS from './MenuItems.json';
 
@@ -7,7 +7,6 @@ import BLOCKS from './MenuItems.json';
 for (const section of Object.keys(BLOCKS)) {
 	for (const item of BLOCKS[section]) item.icon = require('./media/menu/' + item.icon);
 }
-
 
 function Menu(props) {
  return (
@@ -23,7 +22,9 @@ function Menu(props) {
 			<div className="menu-section">{section}</div>
 
 			{ BLOCKS[section].map((item, index) => (
-				<div className="menu-item" key={index}>
+				<div className="menu-item" key={index}
+					onClick={() => { if ('onclick' in item) window[item.onclick](props) }}	
+				>
 					<img src={item.icon} />
 					<div className="menu-item-text">
 						<div className="menu-item-name">{item.name}</div>
@@ -36,6 +37,13 @@ function Menu(props) {
 
 	</div>
  );
+}
+
+/* ITEM FUNCTIONS */
+
+window.generateQR = function(props) {
+	props.setShowQR(true);
+	props.setShowMenu(false);
 }
 
 export default Menu;

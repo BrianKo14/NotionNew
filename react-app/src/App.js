@@ -7,8 +7,9 @@ import page_icon from './media/page-icon.png';
 import add_button from './media/add-button.png';
 import drag_button from './media/drag-button.png';
 
-import './App.css';
+import './css/App.css';
 import Menu from './Menu';
+import QRWindow from './QRWindow';
 
 const FONTS = {
   'paragraph': {'size': '16px', 'weight': 'normal', 'margin': '0px', 'placeholder': "Type '/' for commands"},
@@ -65,6 +66,7 @@ function Document() {
   ]);
   
   const [showMenu, setShowMenu] = useState(false);
+  const [showQR, setShowQR] = useState(false);
 
   // Update selection when textBoxes is updated
   useEffect(() => {
@@ -81,7 +83,8 @@ function Document() {
         textBoxes.map((box, index) => {
           return <TextBox index={index} size={box.size} text={box.text}
                           textBoxes={textBoxes} setTextBoxes={setTextBoxes}
-                          showMenu={showMenu} setShowMenu={setShowMenu} />;
+                          showMenu={showMenu} setShowMenu={setShowMenu}
+                          showQR={showQR} setShowQR={setShowQR} />;
         }) }
     </div>
   );
@@ -115,11 +118,18 @@ function TextBox(props) {
     {/* Input */}
     <InputBox size={props.size} text={props.text} index={props.index} 
       textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes}
-      setShowMenu={props.setShowMenu} />
+      setShowMenu={props.setShowMenu}
+      showQR={props.showQR} setShowQR={props.setShowQR} />
 
     {/* Menu */}
     { props.showMenu && props.index === selectedIndex ? 
-      <Menu setShowMenu={props.setShowMenu} positionFromTop={positionFromTop} />
+      <Menu setShowMenu={props.setShowMenu} positionFromTop={positionFromTop}
+        setShowQR={props.setShowQR} />
+    : null }
+
+    {/* QR Window */}
+    { props.showQR && props.index === selectedIndex ? 
+      <QRWindow setShowQR={props.setShowQR} positionFromTop={positionFromTop} /> 
     : null }
 
   </div>
@@ -149,6 +159,8 @@ function InputBox(props) {
       positionFromTop = e.target.getBoundingClientRect().top / window.innerHeight;
 
       toggleMenu(false, props.setShowMenu);
+
+      props.setShowQR(false); // FIXME: disappears on click
     }}
 
     onChange={e => {
@@ -266,7 +278,5 @@ function useMousePosition() {
 
   return position;
 }
-
-
 
 export default App;
