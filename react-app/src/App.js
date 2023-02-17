@@ -216,6 +216,8 @@ function deleteTextBox(textBoxes, setTextBoxes, index) {
  * Controls the placeholder of the input textbox.
  * For paragraphs: it shows only when empty and selected.
  * For headings: it shows always when empty.
+ * 
+ * FIXME: changes to "type '/' for commands" on header blur
 */
 function controlPlaceholder(selected, target, placeholder) {
   if (selected && target.value === "") {
@@ -241,7 +243,7 @@ function toggleMenu(show, setShowMenu) {
   if (show) {
     // Disable scrolling
     const x = window.scrollX, y = window.scrollY;
-    window.onscroll= () => window.scrollTo(x, y);
+    window.onscroll = () => window.scrollTo(x, y);
   } else {
     // Enable scrolling
     window.onscroll = null;
