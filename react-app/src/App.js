@@ -10,6 +10,7 @@ import drag_button from './media/drag-button.png';
 import './css/App.css';
 import Menu from './Menu';
 import QRWindow from './QRWindow';
+import { cancelDrawingRequest } from './client';
 
 const FONTS = {
   'paragraph': {'size': '16px', 'weight': 'normal', 'margin': '0px', 'placeholder': "Type '/' for commands"},
@@ -161,6 +162,7 @@ function InputBox(props) {
       toggleMenu(false, props.setShowMenu);
 
       props.setShowQR(false);
+      cancelDrawingRequest();
     }}
 
     onChange={e => {

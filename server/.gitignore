@@ -8,3 +8,5 @@
 !.elasticbeanstalk/*.global.yml
 
 server.zip
+
+drawings_waitlist.db

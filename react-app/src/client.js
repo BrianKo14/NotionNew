@@ -12,3 +12,12 @@ exports.getUniqueID = async function() {
 		console.error(error);
 	}
 }
+
+/** Cancel request for drawing. Will delete entry from waitlist */
+exports.cancelDrawingRequest = async function(id) {
+	try {
+		await fetch(`${serverURL}/cancel-request?id=${id}`);
+	} catch (error) {
+		console.error(error);
+	}
+}
