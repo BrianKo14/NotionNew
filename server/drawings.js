@@ -25,7 +25,7 @@ process.on('SIGINT', () => { // 'SIGINT' or 'exit'
  * - drawing: blob of drawing data
  */
 exports.initializeDatabase = async function() {
-	const result = await db.run('CREATE TABLE users (id INTEGER PRIMARY KEY, status BOOLEAN, drawing BLOB)');
+	const result = await db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, status BOOLEAN, drawing BLOB)');
 	if (!result.error) console.error('Table created.')
 }
 
@@ -48,17 +48,22 @@ exports.updateUser = async function(id, drawing) {
 }
 
 /** Returns TRUE if drawing is already available. */
-exports.checkStatus = async function(id) {
-	const result = await db.get('SELECT status FROM users WHERE id = ?', [id]);
-	if (result.error) console.error(result.error);
-	return result.status;
+// TODO: verify that ID exists
+exports.checkStatus = function(id) {
+	return new Promise((resolve, reject) => {
+		db.get('SELECT status FROM users WHERE id = ?', [id], (err, row) => {
+			if (err) console.error(err);
+			else resolve(row.status);
+		});
+	});
 }
 
 /** Returns drawing blob if id matches status TRUE. */
+// TODO: verify that ID exists
 exports.getDrawing = function(id) {
 	return new Promise((resolve, reject) => {
 		db.get('SELECT drawing FROM users WHERE id = ?', [id], (err, row) => {
-			if (err) reject(err);
+			if (err) console.error(err);
 			else resolve(row.drawing);
 		});
 	});

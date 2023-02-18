@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 import './css/QRWindow.css';
 import QRCode from 'qrcode';
-import { getUniqueID } from './client';
+import { getUniqueID, startPolling } from './client';
 
 function QRWindow(props) {
 
@@ -20,6 +20,8 @@ function QRWindow(props) {
 			try {
 				const dataUri = await QRCode.toDataURL(url, { width: 256, height: 256 });
 				setQRCodeDataUri(dataUri);
+
+				startPolling(() => { console.log('Drawing received!') });
 			} catch (error) {
 				console.error(error);
 			}

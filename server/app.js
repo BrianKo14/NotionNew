@@ -49,8 +49,14 @@ app.get('/unique-drawing-id', async (req, res) => {
 });
 
 // Cancel request for drawing. Will delete entry from waitlist
-app.get('cancel-request', async(req, res) => {
+app.get('/cancel-request', async (req, res) => {
+
+	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
+	res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+
 	await drawings.deleteUser(req.query.id);
+
+	res.send('OK');
 });
 
 // Save incoming drawing to database
@@ -58,13 +64,19 @@ app.post('/save-drawing', async (req, res) => {
 	const data = req.body.image;
 	const id = req.body.id;
 
-	await drawings.addUser(id); // DEBUG:
+	// await drawings.addUser(id); // DEBUG:
 	await drawings.updateUser(id, data);
+
+	res.send('OK');
 });
 
 // Check if drawing is available
 app.get('/check-status', async (req, res) => {
+
+	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
+	res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+
 	const id = req.query.id;
 	const status = await drawings.checkStatus(id);
-	res.send(status);
+	res.send(!!status);
 });
