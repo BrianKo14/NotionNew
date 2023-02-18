@@ -8,7 +8,7 @@ db.serialize(); // ensures that database operations are executed in a predictabl
 console.log('Database initialized.');
 
 // Delete database on server shutdown
-process.on('SIGINT', () => { // 'SIGINT' or 'exit'
+process.on('SIGINT', () => {
 	db.close();
 	require('fs').unlinkSync(DB_PATH);
 	process.exit();

@@ -64,7 +64,6 @@ app.post('/save-drawing', async (req, res) => {
 	const data = req.body.image;
 	const id = req.body.id;
 
-	// await drawings.addUser(id); // DEBUG:
 	await drawings.updateUser(id, data);
 
 	res.send('OK');
@@ -79,4 +78,15 @@ app.get('/check-status', async (req, res) => {
 	const id = req.query.id;
 	const status = await drawings.checkStatus(id);
 	res.send(!!status);
+});
+
+// Fetch drawing URL data from database
+app.get('/get-drawing', async (req, res) => {
+
+	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
+	res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+	const id = req.query.id;
+	const data = await drawings.getDrawing(id);
+	res.send(data);
 });

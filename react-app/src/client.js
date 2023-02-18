@@ -51,3 +51,11 @@ exports.startPolling = async function(callback) {
 		}
 	}, POLL_INTERVAL);
 }
+
+/** Fetches drawing URL data from database. */
+exports.getDrawing = async function() {
+	const response = await fetch(`${serverURL}/get-drawing?id=${unique_id}`);
+	const blob = await response.blob();
+	const dataURL = URL.createObjectURL(blob);
+	return dataURL;
+}
