@@ -5,6 +5,7 @@ const express = require('express');
 const drawings = require('./drawings');
 
 const app = express();
+app.use(express.json());
 
 async function startServer() {
 
@@ -50,4 +51,20 @@ app.get('/unique-drawing-id', async (req, res) => {
 // Cancel request for drawing. Will delete entry from waitlist
 app.get('cancel-request', async(req, res) => {
 	await drawings.deleteUser(req.query.id);
+});
+
+// Save incoming drawing to database
+app.post('/save-drawing', async (req, res) => {
+	const data = req.body.image;
+	const id = req.body.id;
+
+	await drawings.addUser(id); // DEBUG:
+	await drawings.updateUser(id, data);
+});
+
+// Check if drawing is available
+app.get('/check-status', async (req, res) => {
+	const id = req.query.id;
+	const status = await drawings.checkStatus(id);
+	res.send(status);
 });

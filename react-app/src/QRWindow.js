@@ -13,8 +13,8 @@ function QRWindow(props) {
 		async function generateQRCode() {
 
 			const uniqueId = await getUniqueID();
-			// const url = `http://notionnew.us-east-1.elasticbeanstalk.com/drawing?user=${uniqueId}`;
-			const url = `http://192.168.0.146:3001/drawing?=${uniqueId}`; // DEBUG: debug in local network
+			// const url = `http://notionnew.us-east-1.elasticbeanstalk.com/drawing?id=${uniqueId}`;
+			const url = `http://192.168.0.146:3001/drawing?id=${uniqueId}`; // DEBUG: debug in local network
 			console.log(url); // FIXME: makes two requests to server
 
 			try {
