@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import static_navigationbar_right from './media/static-navigationbar-right.png';
 import static_navigationbar_left from './media/static-navigationbar-left.png';
@@ -14,10 +14,11 @@ import { cancelDrawingRequest } from './client';
 
 const FONTS = {
   'paragraph': {'size': '16px', 'weight': 'normal', 'margin': '0px', 'placeholder': "Type '/' for commands"},
-  'heading1': {'size': '1.875em', 'weight': '600', 'margin': '2em', 'placeholder': "Heading 1"},
+  'heading1': {'size': '1.875em', 'weight': '600', 'margin': '1em', 'placeholder': "Heading 1"},
   'heading2': {'size': '1.5em', 'weight': '600', 'margin': '1.8em', 'placeholder': "Heading 2"},
-  'heading3': {'size': '1.25em', 'weight': '600', 'margin': '1em', 'placeholder': "Heading 3"},
-  'title': {'size': '40px', 'weight': '700', 'margin': '0', 'placeholder': ""}
+  'heading3': {'size': '1.25em', 'weight': '600', 'margin': '0.5em', 'placeholder': "Heading 3"},
+  'title': {'size': '40px', 'weight': '700', 'margin': '0', 'placeholder': ""},
+  'image': {'size': '16px', 'weight': 'normal', 'margin': '0', 'placeholder': ""},
 };
 
 const MOUSE_HOVER_OFFSET = 120;
@@ -63,7 +64,8 @@ function Document() {
     {"size": "heading2", "text": "Example"},
     {"size": "paragraph", "text": "Some paragraph text"},
     {"size": "paragraph", "text": "More paragraph text. Lorem ipsum blah blah blah."},
-    {"size": "heading1", "text": "Awesome demo 🙌"}
+    {"size": "heading1", "text": "Awesome demo 🙌"},
+    {"size": "image", "text": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/95c277ff-70ab-404b-8672-c41aacdee956/IMG_1278.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230219%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230219T195105Z&X-Amz-Expires=86400&X-Amz-Signature=d50fd351b58b43a89ee73ed2e2c5daff7cd5f570b8d4ee9f52c89239e8d86d48&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22IMG_1278.JPG.jpg%22&x-id=GetObject"},
   ]);
   
   const [showMenu, setShowMenu] = useState(false);
@@ -100,27 +102,40 @@ function TextBox(props) {
   const [isHovering, setIsHovering] = useState(false);
   const mousePos = useMousePosition();
 
+  // Show side handle when hovering over textbox + offset
+  const ref = useRef(null);
+  useEffect(() => {
+    controlSideHandle(ref.current.children[0], mousePos, setIsHovering);
+  }, [mousePos]);
+
   return <div className="textbox"
+
+        ref={ref}
       
         style={{
           height: FONTS[props.size].size,
           marginTop: FONTS[props.size].margin,
         }}
-        
-        // Show side handle when hovering over textbox + offset
-        ref={el => { if (el) controlSideHandle(el, mousePos, setIsHovering) }}>
 
+      >
+
+    {/* Input */}
+    { props.size !== "image" ?
+      <InputBox size={props.size} text={props.text} index={props.index} 
+      textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes}
+      setShowMenu={props.setShowMenu}
+      showQR={props.showQR} setShowQR={props.setShowQR} />
+    : null }
+
+    {/* Image */}
+    { props.size === "image" ?
+      <ImageBox text={props.text} />
+    : null }
 
     {/* Side handle */}
     { isHovering && props.size !== "title" ? 
       <BlockSideHandle textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} index={props.index} />
     : null }
-
-    {/* Input */}
-    <InputBox size={props.size} text={props.text} index={props.index} 
-      textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes}
-      setShowMenu={props.setShowMenu}
-      showQR={props.showQR} setShowQR={props.setShowQR} />
 
     {/* Menu */}
     { props.showMenu && props.index === selectedIndex ? 
@@ -182,6 +197,10 @@ function InputBox(props) {
 
 }
 
+function ImageBox(props) {
+  return <img className="imagebox" src={props.text} />
+}
+
 function BlockSideHandle(props) {
   return (
     <div className="block-side-handle">
@@ -212,6 +231,7 @@ function deleteTextBox(textBoxes, setTextBoxes, index) {
   setTextBoxes(tmp);
 
   selectedIndex = index - 1;
+  while (textBoxes[selectedIndex].size === "image") selectedIndex--;
 }
 
 /**
