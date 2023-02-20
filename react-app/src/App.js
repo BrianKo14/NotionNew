@@ -334,8 +334,15 @@ function toggleMenu(show, setShowMenu) {
 /** Handles specific keys pressed at input box */
 function handleKeyPress(e, textBoxes, setTextBoxes, index) {
   
-  // Add new block on Enter
-  if (e.key === "Enter" && e.shiftKey) { 
+  // Add new block on Shift + Enter
+  if (e.key === "Enter" && e.shiftKey
+      && e.target.selectionStart !== e.target.value.length) { 
+    e.preventDefault();
+    addTextBox(textBoxes, setTextBoxes, index);
+  }
+  // Add new block on Enter if end of line is selected
+  else if (e.key === "Enter" && !e.shiftKey
+      && e.target.selectionStart === e.target.selectionEnd && e.target.selectionStart === e.target.value.length) {
     e.preventDefault();
     addTextBox(textBoxes, setTextBoxes, index);
   }
