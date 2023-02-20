@@ -9,7 +9,7 @@ var unique_id = null;
  * The server will return then ID after storing it in a database marked as "pending". */
 exports.getUniqueID = async function() {
 	try {
-		const response = await fetch(`${serverURL}/unique-drawing-id`);
+		const response = await fetch(`${serverURL}/api/unique-drawing-id`);
 		const json = await response.json();
 
 		if (unique_id !== null) return unique_id;
@@ -25,7 +25,7 @@ exports.getUniqueID = async function() {
 exports.cancelDrawingRequest = async function() {
 	if (unique_id !== null) {
 		try {
-			await fetch(`${serverURL}/cancel-request?id=${unique_id}`);
+			await fetch(`${serverURL}/api/cancel-request?id=${unique_id}`);
 			unique_id = null;
 		} catch (error) {
 			console.error(error);
@@ -43,7 +43,7 @@ exports.startPolling = async function(callback) {
 			return;
 		}
 
-		const response = await fetch(`${serverURL}/check-status?id=${unique_id}`);
+		const response = await fetch(`${serverURL}/api/check-status?id=${unique_id}`);
 		const json = await response.json();
 		if (json === true) {
 			clearInterval(poll);
@@ -54,8 +54,15 @@ exports.startPolling = async function(callback) {
 
 /** Fetches drawing URL data from database. */
 exports.getDrawing = async function() {
-	const response = await fetch(`${serverURL}/get-drawing?id=${unique_id}`);
+	const response = await fetch(`${serverURL}/api/get-drawing?id=${unique_id}`);
+	console.log(response);
 	const blob = await response.blob();
-	const dataURL = URL.createObjectURL(blob);
-	return dataURL;
+	console.log(blob);
+
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onloadend = () => resolve(reader.result);
+		reader.onerror = reject;
+		reader.readAsDataURL(blob);
+	});
 }
