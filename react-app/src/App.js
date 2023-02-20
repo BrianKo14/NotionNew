@@ -65,7 +65,7 @@ function Document() {
     {"size": "paragraph", "text": "Some paragraph text"},
     {"size": "paragraph", "text": "More paragraph text. Lorem ipsum blah blah blah."},
     {"size": "heading1", "text": "Awesome demo 🙌"},
-    // {"size": "image", "text": "https://images.unsplash.com/photo-1526512340740-9217d0159da9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmVydGljYWx8ZW58MHx8MHx8&w=1000&q=80"},
+    {"size": "image", "text": "https://images.unsplash.com/photo-1526512340740-9217d0159da9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmVydGljYWx8ZW58MHx8MHx8&w=1000&q=80"},
   ]);
   
   const [showMenu, setShowMenu] = useState(false);
@@ -73,7 +73,7 @@ function Document() {
 
   // Update selection when textBoxes is updated
   useEffect(() => {
-    const selectedBlock = document.querySelectorAll(".textbox")[selectedIndex].querySelector("input");
+    const selectedBlock = document.querySelectorAll(".textbox")[selectedIndex].querySelector("textarea");
     selectedBlock.focus();
   }, [textBoxes]);
 
@@ -98,6 +98,8 @@ function Document() {
 
 function TextBox(props) {
 
+  const [boxHeight, setBoxHeight] = useState(0);
+
   // Control side handle visibility with mouse position
   const [isHovering, setIsHovering] = useState(false);
   const mousePos = useMousePosition();
@@ -115,7 +117,7 @@ function TextBox(props) {
         ref={ref}
       
         style={{
-          height: FONTS[props.size].size,
+          height: boxHeight,
           marginTop: FONTS[props.size].margin,
         }}
 
@@ -126,7 +128,8 @@ function TextBox(props) {
       <InputBox size={props.size} text={props.text} index={props.index} 
       textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes}
       setShowMenu={props.setShowMenu}
-      showQR={props.showQR} setShowQR={props.setShowQR} />
+      showQR={props.showQR} setShowQR={props.setShowQR}
+      boxHeight={boxHeight} setBoxHeight={setBoxHeight} />
     : null }
 
     {/* Image */}
@@ -136,7 +139,8 @@ function TextBox(props) {
 
     {/* Side handle */}
     { isHovering && props.size !== "title" ? 
-      <BlockSideHandle textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} index={props.index} />
+      <BlockSideHandle textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} index={props.index}
+        size={props.size} />
     : null }
 
     {/* Menu */}
@@ -157,13 +161,25 @@ function TextBox(props) {
 
 function InputBox(props) {
 
-  return <input type="text"
+  const ref = useRef(null);
+
+  useEffect(() => {
+      const height = ref.current.scrollHeight - 7;
+      props.setBoxHeight(height);
+  });
+
+  return <textarea type="text"
   
     value={props.text}
 
+    ref={ref}
+
     style={{ 
+      minHeight: FONTS[props.size].size,
+      height: props.boxHeight,
       fontSize: FONTS[props.size].size,
       fontWeight: FONTS[props.size].weight,
+      // lineHeight: parseFloat(FONTS[props.size].size) * 0.9 + FONTS[props.size].size.slice(-2)
     }} 
 
     // Deselects this block
@@ -220,6 +236,7 @@ function ImageBox(props) {
 
 function BlockSideHandle(props) {
 
+  // Dynamically adjusting horizontal position of handle
   // This makes sure the handle is right next to the element even if the element doesn't have width 100%
   const ref = useRef(null);
   const [leftDist, setLeftDist] = useState(0);
@@ -230,7 +247,12 @@ function BlockSideHandle(props) {
   }, []);
 
   return (
-    <div className="block-side-handle" ref={ref} style={{ left: leftDist + 'px' }}>
+    <div className="block-side-handle" ref={ref} 
+      style={{
+        left: leftDist + 'px',
+        top: parseFloat(FONTS[props.size].size) / 1.5 + FONTS[props.size].size.slice(-2),
+      }}
+    >
       <img src={add_button} onClick={() => addTextBox(props.textBoxes, props.setTextBoxes, props.index)} />
       <img src={drag_button} />
     </div>
@@ -311,9 +333,12 @@ function toggleMenu(show, setShowMenu) {
 
 /** Handles specific keys pressed at input box */
 function handleKeyPress(e, textBoxes, setTextBoxes, index) {
-  if (e.key === "Enter" && e.target.selectionEnd === e.target.value.length) { 
-    addTextBox(textBoxes, setTextBoxes, index);
+  
+  // Add new block on Enter
+  if (e.key === "Enter") { 
+    // addTextBox(textBoxes, setTextBoxes, index);
   }
+  // Delete block on Backspace
   else if (e.key === "Backspace" && e.target.value === "" && index !== 0) {
     e.preventDefault();
     deleteTextBox(textBoxes, setTextBoxes, index);
