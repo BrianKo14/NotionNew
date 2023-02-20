@@ -55,14 +55,7 @@ exports.startPolling = async function(callback) {
 /** Fetches drawing URL data from database. */
 exports.getDrawing = async function() {
 	const response = await fetch(`${serverURL}/api/get-drawing?id=${unique_id}`);
-	console.log(response);
-	const blob = await response.blob();
-	console.log(blob);
+	const text = await response.text();
 
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.onloadend = () => resolve(reader.result);
-		reader.onerror = reject;
-		reader.readAsDataURL(blob);
-	});
+	return text;
 }

@@ -22,8 +22,8 @@ process.on('SIGINT', () => {
  * The table has three columns:
  * - id: unique user ID
  * - status: TRUE if drawing has been received, FALSE if drawing is still expected
- * - drawing: blob of drawing data
- */
+ * - drawing: blob of drawing data, like 'data:image/png;base64,...'
+*/
 exports.initializeDatabase = async function() {
 	const result = await db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, status BOOLEAN, drawing BLOB)');
 	if (!result.error) console.log('Table created.')
@@ -59,7 +59,7 @@ exports.checkStatus = function(id) {
 	});
 }
 
-/** Returns drawing blob if id matches status TRUE.
+/** Returns drawing blob if ID matches status TRUE.
  * Returns NULL if ID doesn't exist. */
 exports.getDrawing = function(id) {
 	return new Promise((resolve, reject) => {

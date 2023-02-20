@@ -17,7 +17,7 @@ function save() {
 	const id = params.get('id');
 
 	// POST to server
-	fetch('/save-drawing', {
+	fetch('/api/save-drawing', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

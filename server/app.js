@@ -5,8 +5,10 @@ const express = require('express');
 const drawings = require('./drawings');
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '50mb' })); // allow large JSON bodies
 
+/** Initiates server async.
+ * Meaninig wait for database to initialize and then start listening. */
 async function startServer() {
 
 	// Initialize database
