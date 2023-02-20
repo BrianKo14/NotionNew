@@ -335,8 +335,9 @@ function toggleMenu(show, setShowMenu) {
 function handleKeyPress(e, textBoxes, setTextBoxes, index) {
   
   // Add new block on Enter
-  if (e.key === "Enter") { 
-    // addTextBox(textBoxes, setTextBoxes, index);
+  if (e.key === "Enter" && e.shiftKey) { 
+    e.preventDefault();
+    addTextBox(textBoxes, setTextBoxes, index);
   }
   // Delete block on Backspace
   else if (e.key === "Backspace" && e.target.value === "" && index !== 0) {
