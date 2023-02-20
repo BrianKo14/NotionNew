@@ -3,9 +3,9 @@ import { useState, useEffect, useRef } from 'react';
 import static_navigationbar_right from './media/static-navigationbar-right.png';
 import static_navigationbar_left from './media/static-navigationbar-left.png';
 import page_icon from './media/page-icon.png';
-
 import add_button from './media/add-button.png';
 import drag_button from './media/drag-button.png';
+import image_buttons from './media/image_buttons.png';
 
 import './css/App.css';
 import Menu from './Menu';
@@ -65,6 +65,7 @@ function Document() {
     {"size": "paragraph", "text": "Some paragraph text"},
     {"size": "paragraph", "text": "More paragraph text. Lorem ipsum blah blah blah."},
     {"size": "heading1", "text": "Awesome demo 🙌"},
+    {"size": "image", "text": "https://images.unsplash.com/photo-1526512340740-9217d0159da9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmVydGljYWx8ZW58MHx8MHx8&w=1000&q=80"},
   ]);
   
   const [showMenu, setShowMenu] = useState(false);
@@ -107,6 +108,8 @@ function TextBox(props) {
     controlSideHandle(ref.current.children[0], mousePos, setIsHovering);
   }, [mousePos]);
 
+  // Stuff that goes inside the block goes in here.
+  // The "significant stuff" (the input, the image, etc.) must go on top, to be accesed using children[0].
   return <div className="textbox"
 
         ref={ref}
@@ -198,12 +201,35 @@ function InputBox(props) {
 }
 
 function ImageBox(props) {
-  return <img className="imagebox" src={props.text} />
+  return (
+    <div className="image-container">
+      <img className="imagebox" src={props.text} />
+
+      <img className="image-buttons" src={image_buttons}/>
+
+      <div className="resizer-container">
+        <div className="image-resizer" />
+      </div>
+      <div className="resizer-container" style={{ right: 0 }}>
+        <div className="image-resizer" />
+      </div>
+    </div>
+  );
 }
 
 function BlockSideHandle(props) {
+
+  // This makes sure the handle is right next to the element even if the element doesn't have width 100%
+  const ref = useRef(null);
+  const [leftDist, setLeftDist] = useState(0);
+  useEffect(() => {
+    const sibling = ref.current.parentElement.children[0].getBoundingClientRect().left;
+    const parent = ref.current.parentElement.getBoundingClientRect().left;
+    setLeftDist(sibling - parent - 45);
+  }, []);
+
   return (
-    <div className="block-side-handle">
+    <div className="block-side-handle" ref={ref} style={{ left: leftDist + 'px' }}>
       <img src={add_button} onClick={() => addTextBox(props.textBoxes, props.setTextBoxes, props.index)} />
       <img src={drag_button} />
     </div>

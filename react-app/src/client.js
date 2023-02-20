@@ -49,6 +49,10 @@ exports.startPolling = async function(callback) {
 			clearInterval(poll);
 			callback();
 		}
+		else if (json === null) {
+			clearInterval(poll);
+			unique_id = null;
+		}
 	}, POLL_INTERVAL);
 }
 

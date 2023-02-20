@@ -41,12 +41,20 @@
   transform: translateX(-50%);
 }
 
+#document::after {
+  content: "";
+  display: block;
+  height: 30vh;
+}
+
 #page-icon {
   width: 78px;
   float: left;
   border-radius: 3px;
+
   cursor: pointer;
 	user-select: none;
+  user-drag: none; -webkit-user-drag: none;
 }
 
 #page-icon:hover { background-color: rgba(0, 0, 0, 0.062); }
@@ -83,13 +91,62 @@
 .textbox input::placeholder { color: #b4b4b4; }
 
 /* Image */
-.imagebox {
+.image-container {
   position: relative;
-  width: 100%; 
-
-  cursor: pointer;
+  display: inline-block;
 }
 
+.imagebox {
+  position: relative;
+  height: 500px;
+  max-width: 100%; 
+
+  cursor: pointer;
+	user-select: none;
+  user-drag: none; -webkit-user-drag: none;
+}
+
+.resizer-container {
+  position: absolute;
+  display: none;
+  top: 0;
+  height: 100%;
+  width: 15px;
+  cursor: col-resize;
+}
+
+.image-container:hover .resizer-container { display: block; }
+
+.image-resizer {
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+
+  border-radius: 20px;
+  background: rgba(15, 15, 15, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  width: 6px;
+  height: 48px;
+  max-height: 50%;
+
+  right: 4.5px;
+}
+
+.image-buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 26px;
+  opacity: 0.8;
+  display: none;
+  margin: 4.5px;
+
+  cursor: pointer;
+	user-select: none;
+  user-drag: none; -webkit-user-drag: none;
+}
+
+.image-container:hover .image-buttons { display: block; }
 
 /* BlockSideHandle */
 
@@ -114,6 +171,7 @@
   padding: 4px;
   border-radius: 3px;
   cursor: grab;
+  user-drag: none; -webkit-user-drag: none;
 
   z-index: 2;
 }

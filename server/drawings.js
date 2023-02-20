@@ -36,10 +36,11 @@ exports.addUser = async function(id) {
 }
 
 /** Removes user from waitlist when drawing is no longer expected. */
-exports.deleteUser = async function(id) {
+const deleteUser = async function(id) {
 	const result = await db.run('DELETE FROM users WHERE id = ?', [id]);
 	if (result.error) console.log(result.error);
 }
+exports.deleteUser = deleteUser;
 
 /** Updates blob when drawing has been received. */
 exports.updateUser = async function(id, drawing) {
@@ -48,12 +49,13 @@ exports.updateUser = async function(id, drawing) {
 }
 
 /** Returns TRUE if drawing is already available.
- * Returns FALSE if drawing is still expected or ID doesn't exist. */
+ * Returns FALSE if drawing is still expected 
+ * Returns NULL if ID doesn't exist. */
 exports.checkStatus = function(id) {
 	return new Promise((resolve, reject) => {
 		db.get('SELECT status FROM users WHERE id = ?', [id], (err, row) => {
 			if (err) console.log(err);
-			else if (!row) resolve(false);
+			else if (!row) resolve(null);
 			else resolve(row.status);
 		});
 	});
@@ -66,7 +68,10 @@ exports.getDrawing = function(id) {
 		db.get('SELECT drawing FROM users WHERE id = ?', [id], (err, row) => {
 			if (err) console.log(err);
 			else if (!row) resolve(null);
-			else resolve(row.drawing);
+			else {
+				resolve(row.drawing);
+				deleteUser(id);
+			}
 		});
 	});
 }
