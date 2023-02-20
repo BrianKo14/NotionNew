@@ -21,8 +21,7 @@ function QRWindow(props) {
 				const dataUri = await QRCode.toDataURL(url, { width: 256, height: 256 });
 				setQRCodeDataUri(dataUri);
 
-				// insertImage(props.textBoxes, props.setTextBoxes, props.index);
-				startPolling(() => insertImage(props.textBoxes, props.setTextBoxes, props.index));
+				startPolling(() => getDrawingAfterPolling(props));
 			} catch (error) {
 				console.error(error);
 			}
@@ -44,12 +43,9 @@ function QRWindow(props) {
 	);
 }
 
-async function insertImage(textBoxes, setTextBoxes, index) {
+async function getDrawingAfterPolling(props) {
 	const dataURL = await getDrawing();
-
-	const tmp = [...textBoxes];
-	tmp.splice(index + 1, 0, {"size": "image", "text": dataURL})
-	setTextBoxes(tmp);
+	props.insertImage(props.textBoxes, props.setTextBoxes, props.index, dataURL);
 }
 
 export default QRWindow;

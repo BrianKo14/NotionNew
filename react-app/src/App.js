@@ -65,7 +65,7 @@ function Document() {
     {"size": "paragraph", "text": "Some paragraph text"},
     {"size": "paragraph", "text": "More paragraph text. Lorem ipsum blah blah blah."},
     {"size": "heading1", "text": "Awesome demo 🙌"},
-    {"size": "image", "text": "https://images.unsplash.com/photo-1526512340740-9217d0159da9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmVydGljYWx8ZW58MHx8MHx8&w=1000&q=80"},
+    // {"size": "image", "text": "https://images.unsplash.com/photo-1526512340740-9217d0159da9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmVydGljYWx8ZW58MHx8MHx8&w=1000&q=80"},
   ]);
   
   const [showMenu, setShowMenu] = useState(false);
@@ -148,7 +148,8 @@ function TextBox(props) {
     {/* QR Window */}
     { props.showQR && props.index === selectedIndex ? 
       <QRWindow setShowQR={props.setShowQR} positionFromTop={positionFromTop}
-        textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} index={props.index} /> 
+        textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} index={props.index}
+        insertImage={insertImage} /> 
     : null }
 
   </div>
@@ -248,7 +249,7 @@ function addTextBox(textBoxes, setTextBoxes, index) {
   selectedIndex = index + 1;
 }
 
-/** Delete an existing block */
+/** Deletes an existing block */
 function deleteTextBox(textBoxes, setTextBoxes, index) {
   if (textBoxes.length === 2) return;
 
@@ -258,6 +259,16 @@ function deleteTextBox(textBoxes, setTextBoxes, index) {
 
   selectedIndex = index - 1;
   while (textBoxes[selectedIndex].size === "image") selectedIndex--;
+}
+
+/** Replaces current block with an image block */
+async function insertImage(textBoxes, setTextBoxes, index, image) {
+	const tmp = [...textBoxes];
+	tmp.splice(index, 1, {"size": "image", "text": image})
+	setTextBoxes(tmp);
+
+	selectedIndex = index - 1;
+	while (textBoxes[selectedIndex].size === "image") selectedIndex--;
 }
 
 /**
