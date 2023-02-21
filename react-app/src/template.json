@@ -1,5 +1,6 @@
 [
 	{"type": "title", "content": "Brave New Notion"},
+	{"type": "paragraph", "content": ""},
 	{"type": "heading1", "content": "This isn't Notion."},
 	{"type": "paragraph", "content": "You'll find that you can't change the page icon, and the menu on top is merely a static image. Things don't fade in and out, they just pop. A counterfeit investigator may conclude this is a fake. It’s like a house with doors that won’t open and pictures for windows."},
 	{"type": "paragraph", "content": "I built this as a demonstration. "},

@@ -16,12 +16,12 @@ import QRWindow from './QRWindow';
 import { cancelDrawingRequest } from './client';
 
 const FONTS = {
-  'paragraph': {'size': '16px', 'weight': 'normal', 'margin': '0px', 'placeholder': "Type '/' for commands"},
-  'heading1': {'size': '1.875em', 'weight': '600', 'margin': '1em', 'placeholder': "Heading 1"},
-  'heading2': {'size': '1.5em', 'weight': '600', 'margin': '1.8em', 'placeholder': "Heading 2"},
-  'heading3': {'size': '1.25em', 'weight': '600', 'margin': '0.5em', 'placeholder': "Heading 3"},
-  'title': {'size': '40px', 'weight': '700', 'margin': '0', 'placeholder': ""},
-  'image': {'size': '16px', 'weight': 'normal', 'margin': '0', 'placeholder': ""},
+  'paragraph': {'size': '16px', 'weight': 'normal', 'margin': '0px', 'lineHeight': '1.5', 'placeholder': "Type '/' for commands"},
+  'heading1': {'size': '1.875em', 'weight': '600', 'margin': '1em', 'lineHeight': '1.3', 'placeholder': "Heading 1"},
+  'heading2': {'size': '1.5em', 'weight': '600', 'margin': '1.8em', 'lineHeight': '1.3', 'placeholder': "Heading 2"},
+  'heading3': {'size': '1.25em', 'weight': '600', 'margin': '0.5em', 'lineHeight': '1.3', 'placeholder': "Heading 3"},
+  'title': {'size': '40px', 'weight': '700', 'margin': '0', 'lineHeight': '1.2', 'placeholder': ""},
+  'image': {'size': '16px', 'weight': 'normal', 'margin': '0', 'lineHeight': '0', 'placeholder': ""},
 };
 
 /** Distance from the block proper where the side handle still shows. */
@@ -171,11 +171,10 @@ function InputBox(props) {
     ref={ref}
 
     style={{ 
-      minHeight: FONTS[props.type].size,
       height: props.boxHeight,
       fontSize: FONTS[props.type].size,
       fontWeight: FONTS[props.type].weight,
-      // lineHeight: parseFloat(FONTS[props.type].size) * 0.9 + FONTS[props.type].size.slice(-2)
+      lineHeight: FONTS[props.type].lineHeight,
     }} 
 
     // Deselects this block
@@ -233,7 +232,7 @@ function ImageBox(props) {
 function BlockSideHandle(props) {
 
   // Dynamically adjusting horizontal position of handle
-  // This makes sure the handle is right next to the element even if the element doesn't have width 100%
+  // This makes sure the handle is right next to the block even if the block doesn't have width 100%
   const ref = useRef(null);
   const [leftDist, setLeftDist] = useState(0);
   useEffect(() => {
@@ -246,7 +245,7 @@ function BlockSideHandle(props) {
     <div className="block-side-handle" ref={ref} 
       style={{
         left: leftDist + 'px',
-        top: parseFloat(FONTS[props.type].size) / 1.5 + FONTS[props.type].size.slice(-2),
+        top: `calc((${FONTS[props.type].size} + 0.5em) / 2)`
       }}
     >
       <img src={add_button} onClick={() => addTextBox(props.textBoxes, props.setTextBoxes, props.index)} />
@@ -261,7 +260,7 @@ function BlockSideHandle(props) {
 /** Adds a new block */
 function addTextBox(textBoxes, setTextBoxes, index) {
   const tmp = [...textBoxes];
-  tmp.splice(index + 1, 0, {"type": "paragraph", "text": ""})
+  tmp.splice(index + 1, 0, {"type": "paragraph", "content": ""})
   setTextBoxes(tmp);
 
   selectedIndex = index + 1;
@@ -282,7 +281,7 @@ function deleteTextBox(textBoxes, setTextBoxes, index) {
 /** Replaces current block with an image block */
 async function insertImage(textBoxes, setTextBoxes, index, image) {
 	const tmp = [...textBoxes];
-	tmp.splice(index, 1, {"type": "image", "text": image})
+	tmp.splice(index, 1, {"type": "image", "content": image})
 	setTextBoxes(tmp);
 
 	selectedIndex = index - 1;
