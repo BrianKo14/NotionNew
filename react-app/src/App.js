@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 
+// Media imports
 import static_navigationbar_right from './media/static-navigationbar-right.png';
 import static_navigationbar_left from './media/static-navigationbar-left.png';
 import page_icon from './media/page-icon.png';
 import add_button from './media/add-button.png';
 import drag_button from './media/drag-button.png';
 import image_buttons from './media/image_buttons.png';
+import TEMPLATE from './template.json';
 
+// Additional imports
 import './css/App.css';
 import Menu from './Menu';
 import QRWindow from './QRWindow';
@@ -21,6 +24,7 @@ const FONTS = {
   'image': {'size': '16px', 'weight': 'normal', 'margin': '0', 'placeholder': ""},
 };
 
+/** Distance from the block proper where the side handle still shows. */
 const MOUSE_HOVER_OFFSET = 120;
 
 /** The index for the block that is currently selected. */
@@ -59,14 +63,7 @@ function NavigationBar() {
 
 function Document() {
   
-  const [textBoxes, setTextBoxes] = useState([
-    {"size": "title", "text": "Job Application Projects"},
-    {"size": "heading2", "text": "Example"},
-    {"size": "paragraph", "text": "Some paragraph text"},
-    {"size": "paragraph", "text": "More paragraph text. Lorem ipsum blah blah blah."},
-    {"size": "heading1", "text": "Awesome demo 🙌"},
-    {"size": "image", "text": "https://images.unsplash.com/photo-1526512340740-9217d0159da9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmVydGljYWx8ZW58MHx8MHx8&w=1000&q=80"},
-  ]);
+  const [textBoxes, setTextBoxes] = useState(TEMPLATE);
   
   const [showMenu, setShowMenu] = useState(false);
   const [showQR, setShowQR] = useState(false);
@@ -84,7 +81,7 @@ function Document() {
 
       {/* Body */} {
         textBoxes.map((box, index) => {
-          return <TextBox index={index} size={box.size} text={box.text}
+          return <TextBox index={index} type={box.type} content={box.content}
                           textBoxes={textBoxes} setTextBoxes={setTextBoxes}
                           showMenu={showMenu} setShowMenu={setShowMenu}
                           showQR={showQR} setShowQR={setShowQR} />;
@@ -98,34 +95,33 @@ function Document() {
 
 function TextBox(props) {
 
+  // Height of block changes with number of lines
   const [boxHeight, setBoxHeight] = useState(0);
 
   // Control side handle visibility with mouse position
   const [isHovering, setIsHovering] = useState(false);
   const mousePos = useMousePosition();
-
-  // Show side handle when hovering over textbox + offset
   const ref = useRef(null);
   useEffect(() => {
     controlSideHandle(ref.current.children[0], mousePos, setIsHovering);
   }, [mousePos]);
 
   // Stuff that goes inside the block goes in here.
-  // The "significant stuff" (the input, the image, etc.) must go on top, to be accesed using children[0].
+  // The significant elements (the input, the image, etc.) must go on top, to be accesed using children[0].
   return <div className="textbox"
 
         ref={ref}
       
         style={{
           height: boxHeight,
-          marginTop: FONTS[props.size].margin,
+          marginTop: FONTS[props.type].margin,
         }}
 
       >
 
     {/* Input */}
-    { props.size !== "image" ?
-      <InputBox size={props.size} text={props.text} index={props.index} 
+    { props.type !== "image" ?
+      <InputBox type={props.type} content={props.content} index={props.index} 
       textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes}
       setShowMenu={props.setShowMenu}
       showQR={props.showQR} setShowQR={props.setShowQR}
@@ -133,14 +129,14 @@ function TextBox(props) {
     : null }
 
     {/* Image */}
-    { props.size === "image" ?
-      <ImageBox text={props.text} />
+    { props.type === "image" ?
+      <ImageBox content={props.content} />
     : null }
 
     {/* Side handle */}
-    { isHovering && props.size !== "title" ? 
+    { isHovering && props.type !== "title" ? 
       <BlockSideHandle textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} index={props.index}
-        size={props.size} />
+        type={props.type} />
     : null }
 
     {/* Menu */}
@@ -170,26 +166,26 @@ function InputBox(props) {
 
   return <textarea type="text"
   
-    value={props.text}
+    value={props.content}
 
     ref={ref}
 
     style={{ 
-      minHeight: FONTS[props.size].size,
+      minHeight: FONTS[props.type].size,
       height: props.boxHeight,
-      fontSize: FONTS[props.size].size,
-      fontWeight: FONTS[props.size].weight,
-      // lineHeight: parseFloat(FONTS[props.size].size) * 0.9 + FONTS[props.size].size.slice(-2)
+      fontSize: FONTS[props.type].size,
+      fontWeight: FONTS[props.type].weight,
+      // lineHeight: parseFloat(FONTS[props.type].size) * 0.9 + FONTS[props.type].size.slice(-2)
     }} 
 
     // Deselects this block
     onBlur={e => {
-      controlPlaceholder(false, e.target, FONTS[props.size].placeholder);
+      controlPlaceholder(false, e.target, FONTS[props.type].placeholder);
     }}
 
     // Selects this block
     onFocus={e => {
-      controlPlaceholder(true, e.target, FONTS[props.size].placeholder);
+      controlPlaceholder(true, e.target, FONTS[props.type].placeholder);
 
       selectedIndex = props.index;
       positionFromTop = e.target.getBoundingClientRect().top / window.innerHeight;
@@ -201,11 +197,11 @@ function InputBox(props) {
     }}
 
     onChange={e => {
-      controlPlaceholder(true, e.target, FONTS[props.size].placeholder);
+      controlPlaceholder(true, e.target, FONTS[props.type].placeholder);
 
       // Update text in state
       const tmp = [...props.textBoxes];
-      tmp[props.index].text = e.target.value;
+      tmp[props.index].content = e.target.value;
       props.setTextBoxes(tmp);
 
       // Show menu if user types '/'
@@ -220,7 +216,7 @@ function InputBox(props) {
 function ImageBox(props) {
   return (
     <div className="image-container">
-      <img className="imagebox" src={props.text} />
+      <img className="imagebox" src={props.content} />
 
       <img className="image-buttons" src={image_buttons}/>
 
@@ -250,7 +246,7 @@ function BlockSideHandle(props) {
     <div className="block-side-handle" ref={ref} 
       style={{
         left: leftDist + 'px',
-        top: parseFloat(FONTS[props.size].size) / 1.5 + FONTS[props.size].size.slice(-2),
+        top: parseFloat(FONTS[props.type].size) / 1.5 + FONTS[props.type].size.slice(-2),
       }}
     >
       <img src={add_button} onClick={() => addTextBox(props.textBoxes, props.setTextBoxes, props.index)} />
@@ -265,7 +261,7 @@ function BlockSideHandle(props) {
 /** Adds a new block */
 function addTextBox(textBoxes, setTextBoxes, index) {
   const tmp = [...textBoxes];
-  tmp.splice(index + 1, 0, {"size": "paragraph", "text": ""})
+  tmp.splice(index + 1, 0, {"type": "paragraph", "text": ""})
   setTextBoxes(tmp);
 
   selectedIndex = index + 1;
@@ -280,17 +276,17 @@ function deleteTextBox(textBoxes, setTextBoxes, index) {
   setTextBoxes(tmp);
 
   selectedIndex = index - 1;
-  while (textBoxes[selectedIndex].size === "image") selectedIndex--;
+  while (textBoxes[selectedIndex].type === "image") selectedIndex--;
 }
 
 /** Replaces current block with an image block */
 async function insertImage(textBoxes, setTextBoxes, index, image) {
 	const tmp = [...textBoxes];
-	tmp.splice(index, 1, {"size": "image", "text": image})
+	tmp.splice(index, 1, {"type": "image", "text": image})
 	setTextBoxes(tmp);
 
 	selectedIndex = index - 1;
-	while (textBoxes[selectedIndex].size === "image") selectedIndex--;
+	while (textBoxes[selectedIndex].type === "image") selectedIndex--;
 }
 
 /**

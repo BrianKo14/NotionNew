@@ -49,7 +49,7 @@ exports.updateUser = async function(id, drawing) {
 }
 
 /** Returns TRUE if drawing is already available.
- * Returns FALSE if drawing is still expected 
+ * Returns FALSE if drawing is still expected.
  * Returns NULL if ID doesn't exist. */
 exports.checkStatus = function(id) {
 	return new Promise((resolve, reject) => {

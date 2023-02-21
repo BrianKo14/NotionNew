@@ -1,7 +1,7 @@
 
 import './css/Menu.css';
 
-import BLOCKS from './MenuItems.json';
+import BLOCKS from './menu_items.json';
 
 // Import icons for each menu item
 for (const section of Object.keys(BLOCKS)) {
@@ -15,6 +15,8 @@ function Menu(props) {
 			top: props.positionFromTop > 0.5 ? '0' : '350px',
 			transform: props.positionFromTop > 0.5 ? 'translate(2%, -105%)' : 'translate(2%, -90%)'
 		}}
+
+		tabIndex={-1}
 	> 
 
 		{ Object.keys(BLOCKS).map(section => ( <div>
