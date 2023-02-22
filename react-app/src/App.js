@@ -157,8 +157,8 @@ function TextBox(props) {
 
 function InputBox(props) {
 
+  // Height of block changes with number of lines
   const ref = useRef(null);
-
   useEffect(() => {
       const height = ref.current.scrollHeight - 7;
       props.setBoxHeight(height);
@@ -294,7 +294,8 @@ async function insertImage(textBoxes, setTextBoxes, index, image) {
  * For paragraphs: it shows only when empty and selected.
  * For headings: it shows always when empty.
  * 
- * FIXME: changes to "type '/' for commands" on header blur
+ * TODO: headings' placeholders should stay put, but implementing this proved unnecessary complicated
+ * because it requires some state management acrobatics over the current implementation of textBoxes.
 */
 function controlPlaceholder(selected, target, placeholder) {
   if (selected && target.value === "") {
@@ -302,7 +303,7 @@ function controlPlaceholder(selected, target, placeholder) {
   } else if (!placeholder.includes("Heading")) {
     target.placeholder = "";
   } else {
-    target.placeholder = "Type '/' for commands";
+    target.placeholder = "";
   }
 }
 

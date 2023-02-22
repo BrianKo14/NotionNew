@@ -13,9 +13,7 @@ function QRWindow(props) {
 		async function generateQRCode() {
 
 			const uniqueId = await getUniqueID();
-			// const url = `http://notionnew.us-east-1.elasticbeanstalk.com/drawing?id=${uniqueId}`;
 			const url = `${serverURL}/drawing?id=${uniqueId}`;
-			console.log(url); // FIXME: makes two requests to server
 
 			try {
 				const dataUri = await QRCode.toDataURL(url, { 

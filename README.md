@@ -11,9 +11,9 @@ This project is a small replica of Notion that includes a new feature for making
 
 - `npm run start`: Runs the app on port 3000. Use for debugging.
 - `npm run build`: Builds the app and moves the build to the `server/public`.
-- `npm run deplot`: For deploying the app in GitHub Pages. I used this for testing at the beginning.
+- `npm run deploy`: For deploying the app in GitHub Pages. I used this for testing at the beginning.
 
 ### Scripts: `server`
 
-- `npm run start`: Runs `node app.js`. I.e. starts the server on port 3001.
+- `npm run start`: Runs `node app.js`, i.e. starts the server on port 3001.
 - `npm run build`: Zips the `server` directory for uploading in AWS Elastic Beanstalk.
