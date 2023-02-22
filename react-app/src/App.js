@@ -280,6 +280,7 @@ function deleteTextBox(textBoxes, setTextBoxes, index) {
 
 /** Replaces current block with an image block */
 async function insertImage(textBoxes, setTextBoxes, index, image) {
+  console.log(image);
 	const tmp = [...textBoxes];
 	tmp.splice(index, 1, {"type": "image", "content": image})
 	setTextBoxes(tmp);

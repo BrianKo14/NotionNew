@@ -5,5 +5,9 @@
 	{"type": "paragraph", "content": "You will find that you can't change the page icon, and the menu on top is merely a static image. Things don't fade in and out, they just pop. A counterfeit investigator may conclude this is a fake. It’s like a house with doors that won’t open and pictures for windows."},
 	{"type": "paragraph", "content": "I built this as a demonstration. "},
 	{"type": "heading3", "content": "It comes with a brand-new feature! 👏"},
-	{"type": "paragraph", "content": "Try adding a new block and typing ‘/’ to see the list of commands."}
+	{"type": "paragraph", "content": "Try adding a new block and typing ‘/’ to see the list of commands."},
+	{"type": "paragraph", "content": ""},
+	{"type": "heading2", "content": "Behind the curtain"},
+	{"type": "paragraph", "content": "I built the front-end you're currently seeing using React. The server-side runs on Node.js, which is hosted on an AWS Elastic Beanstalk. The drawing app is plain JavaScript, which Express serves after queuing each request in an SQLite database. The QR code is generated together with a unique ID that stands for user credentials. It's not meant to be more complicated than it needs to be."},
+	{"type": "image", "content": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4284f454-6f5e-40a1-ba3d-8dee1888b2f0/map.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230222%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230222T142928Z&X-Amz-Expires=86400&X-Amz-Signature=9ee5a284ec86059a694067af139ec3792c8b029a869bdc6c9356ec9b9926f111&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22map.png%22&x-id=GetObject"}
 ]

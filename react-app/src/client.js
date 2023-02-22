@@ -1,5 +1,6 @@
 
 const serverURL = 'http://localhost:3001';
+// const serverURL = window.location.protocol + '//' + window.location.hostname;
 
 const POLL_INTERVAL = 1000;
 

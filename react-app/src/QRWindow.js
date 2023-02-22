@@ -50,7 +50,9 @@ function QRWindow(props) {
 
 async function getDrawingAfterPolling(props) {
 	const dataURL = await getDrawing();
-	props.insertImage(props.textBoxes, props.setTextBoxes, props.index, dataURL);
+
+	if (dataURL !== null)
+		props.insertImage(props.textBoxes, props.setTextBoxes, props.index, dataURL);
 }
 
 export default QRWindow;

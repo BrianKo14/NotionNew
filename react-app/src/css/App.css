@@ -103,7 +103,7 @@
 
 .imagebox {
   position: relative;
-  height: 500px;
+  max-height: 400px;
   max-width: 100%; 
 
   cursor: pointer;
