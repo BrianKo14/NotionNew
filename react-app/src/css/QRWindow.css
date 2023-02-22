@@ -3,7 +3,7 @@
 	position: absolute;
 
 	width: 300px;
-	height: 340px;
+	height: 350px;
 	left: 0;
 
 	background: white;
@@ -21,24 +21,35 @@
 	left: 10%;
 	top: 20px;
 
-	font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, 
-			"Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+	font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 	color: rgba(55, 53, 47, 0.65);
-	text-transform: uppercase;
+	/* text-transform: uppercase; */
 	text-align: center;
-	font-size: 11px;
+	font-size: 14px;
 	font-weight: 500;
 	user-select: none;
+}
+
+.qrwindow-header span {
+	color: black;
+	font-weight: 600;
 }
 
 .qrwindow-img {
 	position: relative;
 
-	width: 90%;
+	width: 65%;
 	left: 0;
-	top: 25px;
+	top: 50px;
+	padding: 20px;
 
 	user-select: none;
 	pointer-events: none;
+
+	/* border: 1px dashed rgba(55, 53, 47, 0.65); */
+	box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px inset;
+	border-radius: 10px;
+
+	background-color: #F7F7F5;
 
 }
