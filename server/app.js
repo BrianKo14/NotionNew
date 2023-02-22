@@ -21,16 +21,26 @@ async function startServer() {
 
 }
 
-startServer();
-
 
 /** ENDPOINTS */
+
+// Serve Notion dummy page
+app.use(express.static('public'));
+app.get('/', (req, res) => {
+	res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Serve mobile drawing app
+app.use(express.static('drawing-app'));
+app.get('/drawing', (req, res) => {
+	res.sendFile(path.join(__dirname, 'drawing-app', 'index.html'));
+});
 
 // Generate a unique drawing ID for each user and store it in a waitlist marked as "pending"
 app.get('/api/unique-drawing-id', async (req, res) => {
 
 	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
-	res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+	// res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 
 	const newId = Math.floor(Math.random() * 1000000); // TODO: use a unique ID generator
 	await drawings.addUser(newId);
@@ -42,7 +52,7 @@ app.get('/api/unique-drawing-id', async (req, res) => {
 app.get('/api/cancel-request', async (req, res) => {
 
 	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
-	res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+	// res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 
 	await drawings.deleteUser(req.query.id);
 
@@ -63,7 +73,7 @@ app.post('/api/save-drawing', async (req, res) => {
 app.get('/api/check-status', async (req, res) => {
 
 	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
-	res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+	// res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 
 	const id = req.query.id;
 	const status = await drawings.checkStatus(id);
@@ -74,21 +84,12 @@ app.get('/api/check-status', async (req, res) => {
 app.get('/api/get-drawing', async (req, res) => {
 
 	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
-	res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+	// res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 
 	const id = req.query.id;
 	const data = await drawings.getDrawing(id);
 	res.send(data);
 });
 
-// Serve mobile drawing app
-app.use(express.static('drawing-app'));
-app.get('/drawing', (req, res) => {
-	res.sendFile(path.join(__dirname, 'drawing-app', 'index.html'));
-});
 
-// Serve Notion dummy page
-app.use(express.static('public'));
-app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+startServer();

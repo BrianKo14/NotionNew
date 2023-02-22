@@ -13,7 +13,7 @@ import TEMPLATE from './template.json';
 import './css/App.css';
 import Menu from './Menu';
 import QRWindow from './QRWindow';
-import { cancelDrawingRequest } from './client';
+const { cancelDrawingRequest } = require('./client.js');
 
 const FONTS = {
   'paragraph': {'size': '16px', 'weight': 'normal', 'margin': '0px', 'lineHeight': '1.5', 'placeholder': "Type '/' for commands"},

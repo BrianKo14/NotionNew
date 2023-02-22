@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 import './css/QRWindow.css';
 import QRCode from 'qrcode';
-import { getUniqueID, startPolling, getDrawing } from './client';
+const { getUniqueID, startPolling, getDrawing, serverURL } = require('./client.js');
 
 function QRWindow(props) {
 
@@ -14,7 +14,7 @@ function QRWindow(props) {
 
 			const uniqueId = await getUniqueID();
 			// const url = `http://notionnew.us-east-1.elasticbeanstalk.com/drawing?id=${uniqueId}`;
-			const url = `http://192.168.0.146:3001/drawing?id=${uniqueId}`; // DEBUG: debug in local network
+			const url = `${serverURL}/drawing?id=${uniqueId}`;
 			console.log(url); // FIXME: makes two requests to server
 
 			try {
