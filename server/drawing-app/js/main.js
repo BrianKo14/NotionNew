@@ -10,7 +10,7 @@ fabricCanvas.isDrawingMode = true;
 fabricCanvas.freeDrawingBrush.width = 5;
 
 fabricCanvas.setWidth(window.innerWidth - 60);
-fabricCanvas.setHeight(window.innerHeight - 150 - 60 - 30);
+fabricCanvas.setHeight(window.innerHeight - 390);
 
 
 
@@ -19,6 +19,11 @@ function showModal(text) {
 	document.getElementById('modal').style.display = 'block';
 	document.getElementById('modal-text').innerHTML = text;
 }
+
+// Hide placeholder
+fabricCanvas.on('mouse:down', () => {
+	document.getElementById('placeholder').style.display = 'none';
+});
 
 
 
@@ -39,7 +44,7 @@ const poll = setInterval(async () => {
 }, POLL_INTERVAL);
 
 /** Post drawing to server */
-function save() {
+function saveDrawing() {
 	clearInterval(poll);
 
 	// Render
@@ -62,6 +67,11 @@ function save() {
 	.catch(err => {
 		console.error(err);
 	});
+}
+
+/** Clear canvas */
+function clearCanvas() {
+	fabricCanvas.clear();
 }
 
 /** Change color */

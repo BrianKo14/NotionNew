@@ -13,6 +13,8 @@
       <span id="modal-text"></span>
     </div>
 
+    <span id="placeholder">Draw something beautiful!</span>
+
     <div id="color-panel">
       <div class="color selected" style="background-color: #000000" onclick="setColor(this, '#000000')"></div>
       <div class="color" style="background-color: #787774" onclick="setColor(this, '#787774')"></div>
@@ -28,7 +30,8 @@
 
     <div id="canvas-parent">
       <canvas id="canvas"></canvas>
-      <button id="save-button" onclick="save()">Save</button>
+      <button class="button" id="save-button" onclick="saveDrawing()">Save</button>
+      <button class="button" id="clear-button" onclick="clearCanvas()">Clear</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.js"></script>
