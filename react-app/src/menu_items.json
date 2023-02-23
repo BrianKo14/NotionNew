@@ -2,7 +2,7 @@
 	"New feature": [
 		{
 			"name": "Drawing",
-			"description": "Draw with your phone!",
+			"description": "Make a doodle!",
 			"icon": "drawing.png",
 			"onclick": "generateQR"
 		}

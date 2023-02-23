@@ -74,7 +74,7 @@ function Document() {
 
       {/* Body */} {
         textBoxes.map((box, index) => {
-          return <TextBox index={index} type={box.type} content={box.content}
+          return <TextBox index={index} type={box.type} content={box}
                           textBoxes={textBoxes} setTextBoxes={setTextBoxes}
                           showMenu={showMenu} setShowMenu={setShowMenu}
                           showQR={showQR} setShowQR={setShowQR} />;
@@ -113,8 +113,8 @@ function TextBox(props) {
       >
 
     {/* Input */}
-    { props.type !== "image" ?
-      <InputBox type={props.type} content={props.content} index={props.index} 
+    { props.type !== "image" && props.type !== "callout" ?
+      <InputBox type={props.type} text={props.content.text} index={props.index} 
       textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes}
       setShowMenu={props.setShowMenu}
       showQR={props.showQR} setShowQR={props.setShowQR}
@@ -123,7 +123,12 @@ function TextBox(props) {
 
     {/* Image */}
     { props.type === "image" ?
-      <ImageBox content={props.content} />
+      <ImageBox image={props.content.image} />
+    : null }
+
+    {/* Callout */}
+    { props.type === "callout" ?
+      <Callout text={props.content.text} link={props.content.link} image={props.content.image} />
     : null }
 
 
@@ -161,7 +166,7 @@ function InputBox(props) {
 
   return <textarea type="text"
   
-    value={props.content}
+    value={props.text}
 
     ref={ref}
 
@@ -195,7 +200,7 @@ function InputBox(props) {
 
       // Update text in state
       const tmp = [...props.textBoxes];
-      tmp[props.index].content = e.target.value;
+      tmp[props.index].text = e.target.value;
       props.setTextBoxes(tmp);
 
       // Show menu if user types '/'
@@ -210,7 +215,7 @@ function InputBox(props) {
 function ImageBox(props) {
   return (
     <div className="image-container">
-      <img className="imagebox" src={props.content} />
+      <img className="imagebox" src={props.image} />
 
       <img className="image-buttons" src={image_buttons}/>
 
@@ -222,6 +227,22 @@ function ImageBox(props) {
       </div>
     </div>
   );
+}
+
+function Callout(props) {
+  return (
+    <div className="callout"
+
+      style={{ 
+        fontSize: FONTS["callout"].size,
+        fontWeight: FONTS["callout"].weight,
+        lineHeight: FONTS["callout"].lineHeight,
+      }} 
+    >
+      <img src={props.image} />
+      <a href={props.link} target="_blank">{props.text}</a>
+    </div>
+  )
 }
 
 function BlockSideHandle(props) {
@@ -255,7 +276,7 @@ function BlockSideHandle(props) {
 /** Adds a new block */
 function addTextBox(textBoxes, setTextBoxes, index) {
   const tmp = [...textBoxes];
-  tmp.splice(index + 1, 0, {"type": "paragraph", "content": ""})
+  tmp.splice(index + 1, 0, {"type": "paragraph", "text": ""})
   setTextBoxes(tmp);
 
   selectedIndex = index + 1;
@@ -276,7 +297,7 @@ function deleteTextBox(textBoxes, setTextBoxes, index) {
 /** Replaces current block with an image block */
 async function insertImage(textBoxes, setTextBoxes, index, image) {
 	const tmp = [...textBoxes];
-	tmp.splice(index, 1, {"type": "image", "content": image})
+	tmp.splice(index, 1, {"type": "image", "image": image})
 	setTextBoxes(tmp);
 
 	selectedIndex = index - 1;

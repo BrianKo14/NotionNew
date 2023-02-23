@@ -149,6 +149,54 @@
 
 .image-container:hover .image-buttons { display: block; }
 
+/* Callout */
+
+.callout {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 58px;
+
+  border: 1px solid rgba(55, 53, 47, 0.16);
+  border-radius: 3px;
+
+  cursor: text;
+}
+
+.callout img {
+  position: absolute;
+  top: 50%;
+  left: 25px;
+  transform: translate(-50%, -50%);
+  height: 21.312px;
+  width: 21.312px;
+
+  border-radius: 3px;
+  cursor: pointer;
+
+	user-select: none;
+  user-drag: none; -webkit-user-drag: none;
+}
+
+.callout img:hover { background-color: rgba(0, 0, 0, 0.062); }
+
+.callout a {
+  position: absolute;
+  top: 50%;
+  left: 48px;
+  transform: translateY(-50%);
+
+  /* border-radius: 3px; */
+  cursor: pointer;
+
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  color: black;
+  opacity: 0.4;
+  text-decoration: none;
+  border-bottom: 0.01em solid black;
+}
+
 /* BlockSideHandle */
 
 .block-side-handle {
