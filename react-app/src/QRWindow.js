@@ -14,6 +14,7 @@ function QRWindow(props) {
 
 			const uniqueId = await getUniqueID();
 			const url = `${serverURL}/drawing?id=${uniqueId}`;
+			console.log(url);
 
 			try {
 				const dataUri = await QRCode.toDataURL(url, { 

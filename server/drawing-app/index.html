@@ -9,6 +9,23 @@
   </head>
   <body>
 
+    <div id="modal">
+      <span id="modal-text"></span>
+    </div>
+
+    <div id="color-panel">
+      <div class="color selected" style="background-color: #000000" onclick="setColor(this, '#000000')"></div>
+      <div class="color" style="background-color: #787774" onclick="setColor(this, '#787774')"></div>
+      <div class="color" style="background-color: #976D57" onclick="setColor(this, '#976D57')"></div>
+      <div class="color" style="background-color: #CB782E" onclick="setColor(this, '#CB782E')"></div>
+      <div class="color" style="background-color: #C29343" onclick="setColor(this, '#C29343')"></div>
+      <div class="color" style="background-color: #538163" onclick="setColor(this, '#538163')"></div>
+      <div class="color" style="background-color: #447BA4" onclick="setColor(this, '#447BA4')"></div>
+      <div class="color" style="background-color: #8A66AB" onclick="setColor(this, '#8A66AB')"></div>
+      <div class="color" style="background-color: #B35488" onclick="setColor(this, '#B35488')"></div>
+      <div class="color" style="background-color: #C4554D" onclick="setColor(this, '#C4554D')"></div>
+    </div>
+
     <div id="canvas-parent">
       <canvas id="canvas"></canvas>
       <button id="save-button" onclick="save()">Save</button>

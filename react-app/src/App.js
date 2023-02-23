@@ -7,6 +7,7 @@ import page_icon from './media/page-icon.png';
 import add_button from './media/add-button.png';
 import drag_button from './media/drag-button.png';
 import image_buttons from './media/image_buttons.png';
+import FONTS from './fonts.json';
 import TEMPLATE from './template.json';
 
 // Additional imports
@@ -15,14 +16,6 @@ import Menu from './Menu';
 import QRWindow from './QRWindow';
 const { cancelDrawingRequest } = require('./client.js');
 
-const FONTS = {
-  'paragraph': {'size': '16px', 'weight': 'normal', 'margin': '0px', 'lineHeight': '1.5', 'placeholder': "Type '/' for commands"},
-  'heading1': {'size': '1.875em', 'weight': '600', 'margin': '1em', 'lineHeight': '1.3', 'placeholder': "Heading 1"},
-  'heading2': {'size': '1.5em', 'weight': '600', 'margin': '1.8em', 'lineHeight': '1.3', 'placeholder': "Heading 2"},
-  'heading3': {'size': '1.25em', 'weight': '600', 'margin': '0.5em', 'lineHeight': '1.3', 'placeholder': "Heading 3"},
-  'title': {'size': '40px', 'weight': '700', 'margin': '0', 'lineHeight': '1.2', 'placeholder': ""},
-  'image': {'size': '16px', 'weight': 'normal', 'margin': '0', 'lineHeight': '0', 'placeholder': ""},
-};
 
 /** Distance from the block proper where the side handle still shows. */
 const MOUSE_HOVER_OFFSET = 120;
@@ -98,7 +91,7 @@ function TextBox(props) {
   // Height of block changes with number of lines
   const [boxHeight, setBoxHeight] = useState(0);
 
-  // Control side handle visibility with mouse position
+  // Control "side handle" visibility with mouse position
   const [isHovering, setIsHovering] = useState(false);
   const mousePos = useMousePosition();
   const ref = useRef(null);
@@ -107,7 +100,7 @@ function TextBox(props) {
   }, [mousePos]);
 
   // Stuff that goes inside the block goes in here.
-  // The significant elements (the input, the image, etc.) must go on top, to be accesed using children[0].
+  // The significant elements (the input box, the image, etc.) must go on top, to be accesed using children[0].
   return <div className="textbox"
 
         ref={ref}
@@ -132,6 +125,8 @@ function TextBox(props) {
     { props.type === "image" ?
       <ImageBox content={props.content} />
     : null }
+
+
 
     {/* Side handle */}
     { isHovering && props.type !== "title" ? 
@@ -280,7 +275,6 @@ function deleteTextBox(textBoxes, setTextBoxes, index) {
 
 /** Replaces current block with an image block */
 async function insertImage(textBoxes, setTextBoxes, index, image) {
-  console.log(image);
 	const tmp = [...textBoxes];
 	tmp.splice(index, 1, {"type": "image", "content": image})
 	setTextBoxes(tmp);

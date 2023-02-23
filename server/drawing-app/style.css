@@ -10,7 +10,7 @@ body {
 
 .canvas-container {
 	position: absolute;
-	top: 30px;
+	top: 180px;
 	left: 30px;
 	width: calc(100% - 60px);
 	height: calc(100% - 150px - 60px - 30px);
@@ -37,4 +37,59 @@ body {
 		Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 	font-size: 38px;
 	font-weight: 500;
+}
+
+#modal {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 1;
+
+	display: none;
+}
+
+#modal-text {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 100%;
+	transform: translateY(-50%);
+
+	color: white;
+	font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+		Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+	font-size: 60px;
+	font-weight: 500;	
+	text-align: center;
+}
+
+#color-panel {
+	position: absolute;
+	top: 30px;
+	left: 30px;
+	width: calc(100% - 60px);
+	height: 120px;
+
+	display: flex;
+	flex-wrap: wrap;
+
+}
+
+.color {
+	flex-grow: 1;
+	height: 120px;
+	margin: 0 5px 0 5px;
+
+	background-color: white;
+	box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 5px inset;
+	border-radius: 15px;
+}
+
+.selected {
+	box-shadow: none;
+	border: 5px solid rgb(35, 131, 226);
 }

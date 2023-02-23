@@ -61,6 +61,19 @@ exports.checkStatus = function(id) {
 	});
 }
 
+/** Returns TRUE if ID exists in database,
+ * FALSE otherwise. */
+exports.checkId = function(id) {
+	return new Promise((resolve, reject) => {
+		db.get('SELECT id FROM users WHERE id = ?', [id], (err, row) => {
+			if (err) console.log(err);
+			else if (!row) resolve(false);
+			else resolve(true);
+		});
+	});
+}
+
+
 /** Returns drawing blob if ID matches status TRUE.
  * Returns NULL if ID doesn't exist. */
 exports.getDrawing = function(id) {

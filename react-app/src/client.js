@@ -1,5 +1,6 @@
 
-export const serverURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+// export const serverURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+export const serverURL = 'http://192.168.0.146:3001';
 
 const POLL_INTERVAL = 1000;
 
