@@ -1,7 +1,7 @@
 [
 	{"type": "title", "text": "Brave New Notion"},
 	{"type": "paragraph", "text": ""},
-	{"type": "heading1", "text": "This isn't Notion."},
+	{"type": "heading1", "text": "This is not Notion."},
 	{"type": "paragraph", "text": "You will find that you can't change the page icon, and the menu on top is merely a static image. Things don't fade in and out, they just pop. A counterfeit investigator may conclude this is a fake. It’s like a house with doors that won’t open and pictures for windows."},
 	{"type": "paragraph", "text": "I built this as a demonstration. "},
 	{"type": "heading3", "text": "It comes with a brand-new feature! 👏"},
@@ -26,11 +26,16 @@
 	{
 		"type": "callout",
 		"text": "My resumé",
-		"link": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/3edcce2f-6eeb-4789-8100-43518539c1ef/resume-nov.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230223%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230223T164114Z&X-Amz-Expires=86400&X-Amz-Signature=5bd73ccd0f68710bb42c73dab21177487783ce6f9c8efc4773560e6c85014887&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22resume-nov.pdf%22&x-id=GetObject",
+		"link": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/079a14f7-cd74-4da4-b5f8-07b6f1815007/resume-feb-23-optim.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230224%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230224T132326Z&X-Amz-Expires=86400&X-Amz-Signature=2bdb3363e2fc5cbfa27b9170b79b1e4fbdcb71e47cdefc5d3301c1d395ce6191&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22resume-feb-23-optim.jpg%22&x-id=GetObject",
 		"image": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6bb6f18c-fc4f-4ae2-9569-89779a48c793/paperclip_1f4ce.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230223%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230223T172330Z&X-Amz-Expires=86400&X-Amz-Signature=ede063a4210cd5ca6b6278d43d1e20c57c3c250d94bed38e0343124522dde239&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22paperclip_1f4ce.png%22&x-id=GetObject"
 	},
 	{"type": "paragraph", "text": ""},
-	{"type": "paragraph", "text": "Since my home lies in the Southern Hemisphere and I have my studies to attend to, I’m only available to work starting approximately 15th December until 20th March."},
+	{"type": "paragraph", "text": "Thank you for taking the time to check out my project! I hope it gives you an idea of my skills and what I can bring to the table. If you have any questions, please don't hesitate to reach out to me. I look forward to hearing from you!"},
 	{"type": "paragraph", "text": ""},
-	{"type": "paragraph", "text": "Thank you for taking the time to check out my project! I hope it gives you an idea of my skills and what I can bring to the table. If you have any questions, please don't hesitate to reach out to me. I look forward to hearing from you!"}
+	{
+		"type": "callout",
+		"text": "brian.ilank@gmail.com",
+		"link": "mailto:brian.ilank@gmail.com",
+		"image": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/191f5ca3-44c8-4227-9344-5ae690184ded/envelope_2709-fe0f.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230223%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230223T182607Z&X-Amz-Expires=86400&X-Amz-Signature=9fef121541078f395fea61c714b1b2759ac5cc59634eb2403e11a6c6c70ecfc8&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22envelope_2709-fe0f.png%22&x-id=GetObject"
+	}
 ]

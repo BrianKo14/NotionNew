@@ -16,6 +16,7 @@ fabricCanvas.setHeight(window.innerHeight - 390);
 
 /** Show modal overlay with some given text */
 function showModal(text) {
+	document.getElementById('placeholder').style.display = 'none';
 	document.getElementById('modal').style.display = 'block';
 	document.getElementById('modal-text').innerHTML = text;
 }
@@ -38,7 +39,7 @@ const poll = setInterval(async () => {
 	const json = await response.json();
 	if (!json) {
 		clearInterval(poll);
-		showModal('Drawing cancelled!');
+		showModal('Drawing cancelled.');
 	}
 
 }, POLL_INTERVAL);
@@ -82,4 +83,3 @@ function setColor(el, color) {
 	el.classList.add('selected');
 	lastElement = el;
 }
-

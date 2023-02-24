@@ -1,5 +1,5 @@
 
-# Notion New
+# ✍️ Notion New
 
 This project is a small replica of Notion that includes a new feature for making drawings with your phone and adding them to your projects. I built it as a demonstration to showcase my skills and interest in working at Notion.
 

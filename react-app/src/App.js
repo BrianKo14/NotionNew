@@ -65,6 +65,8 @@ function Document() {
   useEffect(() => {
     const selectedBlock = document.querySelectorAll(".textbox")[selectedIndex].querySelector("textarea");
     selectedBlock.focus();
+    selectedBlock.selectionStart = selectedBlock.value.length;
+    selectedBlock.selectionEnd = selectedBlock.value.length;
   }, [textBoxes]);
 
   return (
@@ -100,7 +102,7 @@ function TextBox(props) {
   }, [mousePos]);
 
   // Stuff that goes inside the block goes in here.
-  // The significant elements (the input box, the image, etc.) must go on top, to be accesed using children[0].
+  // The significant elements (the input box, the image, etc.) must go on top, to be accessed using children[0].
   return <div className="textbox"
 
         ref={ref}
@@ -362,6 +364,12 @@ function handleKeyPress(e, textBoxes, setTextBoxes, index) {
   else if (e.key === "Backspace" && e.target.value === "" && index !== 0) {
     e.preventDefault();
     deleteTextBox(textBoxes, setTextBoxes, index);
+  }
+
+  // Delete last image/callout on Backspace if cursor is at the beginning of the line
+  if (e.key === "Backspace" && e.target.selectionStart == 0 && index !== 0
+    && textBoxes[index - 1].type === "image" || textBoxes[index - 1].type === "callout") {
+      deleteTextBox(textBoxes, setTextBoxes, index - 1);
   }
 }
 
