@@ -1,11 +1,11 @@
 
-import './css/Menu.css';
+import '../css/Menu.css';
 
-import BLOCKS from './menu_items.json';
+import BLOCKS from '../data/menu_items.json';
 
 // Import icons for each menu item
 for (const section of Object.keys(BLOCKS)) {
-	for (const item of BLOCKS[section]) item.icon = require('./media/menu/' + item.icon);
+	for (const item of BLOCKS[section]) item.icon = require('../media/menu/' + item.icon);
 }
 
 function Menu(props) {
@@ -19,7 +19,7 @@ function Menu(props) {
 		tabIndex={-1}
 	> 
 
-		{ Object.keys(BLOCKS).map(section => ( <div>
+		{ Object.keys(BLOCKS).map((section, index) => ( <div key={index}>
 
 			<div className="menu-section">{section}</div>
 

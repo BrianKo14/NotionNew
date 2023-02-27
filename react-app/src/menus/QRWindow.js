@@ -1,9 +1,9 @@
 
 import { useState, useEffect } from 'react';
 
-import './css/QRWindow.css';
+import '../css/QRWindow.css';
 import QRCode from 'qrcode';
-const { getUniqueID, startPolling, getDrawing, serverURL } = require('./client.js');
+const { getUniqueID, startPolling, getDrawing, serverURL } = require('../client.js');
 
 function QRWindow(props) {
 
