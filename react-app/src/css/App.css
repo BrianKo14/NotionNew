@@ -59,7 +59,7 @@
 
 #page-icon:hover { background-color: rgba(0, 0, 0, 0.062); }
 
-.textbox {
+.block {
   position: relative;
   display: inline-block;
   width: 100%; 
@@ -79,7 +79,7 @@
 
 /* Text */
 
-.textbox textarea {
+.block textarea {
   position: absolute;
   left: 0;
   top: 0;
@@ -99,7 +99,7 @@
   vertical-align: top;
 }
 
-.textbox textarea::placeholder { color: #b4b4b4; }
+.block textarea::placeholder { color: #b4b4b4; }
 
 /* Image */
 .image-container {

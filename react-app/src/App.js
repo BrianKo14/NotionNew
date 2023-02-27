@@ -70,18 +70,18 @@ function NavigationBar() {
 
 function Document() {
   
-  const [textBoxes, setTextBoxes] = useState(TEMPLATE);
+  const [blocks, setBlocks] = useState(TEMPLATE);
 
   const [showMenu, setShowMenu] = useState(false);
   const [showQR, setShowQR] = useState(false);
 
-  // Update selection when textBoxes is updated
+  // Update selection when 'blocks' is updated
   useEffect(() => {
-    const selectedBlock = document.querySelectorAll(".textbox")[selectedIndex].querySelector("textarea");
+    const selectedBlock = document.querySelectorAll(".block")[selectedIndex].querySelector("textarea");
     selectedBlock.focus();
     selectedBlock.selectionStart = selectedBlock.value.length;
     selectedBlock.selectionEnd = selectedBlock.value.length;
-  }, [textBoxes]);
+  }, [blocks]);
 
   return (
     <div id="document">
@@ -89,9 +89,9 @@ function Document() {
       <img id="page-icon" src={page_icon} />
 
       {/* Body */} {
-        textBoxes.map((box, index) => {
-          return <TextBox index={index} key={index} type={box.type} content={box}
-                          textBoxes={textBoxes} setTextBoxes={setTextBoxes}
+        blocks.map((box, index) => {
+          return <Block index={index} key={index} type={box.type} content={box}
+                          blocks={blocks} setBlocks={setBlocks}
                           showMenu={showMenu} setShowMenu={setShowMenu}
                           showQR={showQR} setShowQR={setShowQR} />;
         }) }
@@ -100,9 +100,9 @@ function Document() {
 }
 
 
-/* --- TEXTBOX --- */
+/* --- BLOCK --- */
 
-function TextBox(props) {
+function Block(props) {
 
   // Height of block changes with number of lines
   const [boxHeight, setBoxHeight] = useState(0);
@@ -115,8 +115,8 @@ function TextBox(props) {
     controlSideHandle(ref.current.children[0], mousePos, setIsHovering);
 
     if (dragClone) {
-      dragClone.style.top = mousePos.y + "px";
-      dragClone.style.left = mousePos.x + "px";
+      dragClone.style.top = mousePos.y - 14 + "px";
+      dragClone.style.left = mousePos.x + 14 + "px";
       getCurrentlyHovered(ref.current.children[0], mousePos, props.index);
     } else {
       ref.current.children[0].parentElement.classList.remove("hover-line"); 
@@ -125,7 +125,7 @@ function TextBox(props) {
 
   // Stuff that goes inside the block goes in here.
   // The significant elements (the input box, the image, etc.) must go on top, to be accessed using children[0].
-  return <div className="textbox"
+  return <div className="block"
 
         ref={ref}
       
@@ -138,7 +138,7 @@ function TextBox(props) {
     {/* Input */}
     { props.type !== "image" && props.type !== "callout" ?
       <InputBox type={props.type} text={props.content.text} index={props.index} 
-      textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes}
+      blocks={props.blocks} setBlocks={props.setBlocks}
       setShowMenu={props.setShowMenu}
       showQR={props.showQR} setShowQR={props.setShowQR}
       boxHeight={boxHeight} setBoxHeight={setBoxHeight} />
@@ -160,7 +160,7 @@ function TextBox(props) {
 
     {/* Side handle */}
     { isHovering && props.type !== "title" ? 
-      <BlockSideHandle textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} index={props.index}
+      <BlockSideHandle blocks={props.blocks} setBlocks={props.setBlocks} index={props.index}
         type={props.type} />
     : null }
 
@@ -173,7 +173,7 @@ function TextBox(props) {
     {/* QR Window */}
     { props.showQR && props.index === selectedIndex ? 
       <QRWindow setShowQR={props.setShowQR} positionFromTop={positionFromTop}
-        textBoxes={props.textBoxes} setTextBoxes={props.setTextBoxes} index={props.index}
+        blocks={props.blocks} setBlocks={props.setBlocks} index={props.index}
         insertImage={insertImage} /> 
     : null }
 
@@ -226,7 +226,7 @@ function InputBox(props) {
       controlPlaceholder(true, e.target, FONTS[props.type].placeholder);
 
       // Update text in state
-      props.setTextBoxes(prev => {
+      props.setBlocks(prev => {
         const tmp = [...prev];
         tmp[props.index].text = e.target.value;
         return tmp;
@@ -236,7 +236,7 @@ function InputBox(props) {
       toggleMenu(e.target.value[0] === '/', props.setShowMenu);
     }}
 
-    onKeyDown={e => handleKeyPress(e, props.textBoxes, props.setTextBoxes, props.index)}
+    onKeyDown={e => handleKeyPress(e, props.blocks, props.setBlocks, props.index)}
   />
 
 }
@@ -303,8 +303,8 @@ function BlockSideHandle(props) {
   }, []);
 
   const dragStartCallback = useCallback((e) => {
-    handleDragStart(e, props.index, props.setTextBoxes);
-  }, [props.index, props.textBoxes, props.setTextBoxes]);
+    handleDragStart(e, props.index, props.setBlocks);
+  }, [props.index, props.blocks, props.setBlocks]);
 
   return (
     <div className="block-side-handle" ref={ref} 
@@ -313,7 +313,7 @@ function BlockSideHandle(props) {
         top: `calc((${FONTS[props.type].size} + 0.5em) / 2)`
       }}
     >
-      <img src={add_button} onClick={() => addTextBox(props.setTextBoxes, props.index)} />
+      <img src={add_button} onClick={() => addBlock(props.setBlocks, props.index)} />
       <img src={drag_button} onMouseDown={dragStartCallback} />
     </div>
   );
@@ -325,15 +325,15 @@ function BlockSideHandle(props) {
 /* - CHANGING BLOCKS - */
 
 /** Adds a new block */
-function addTextBox(setTextBoxes, index) {
-  setTextBoxes(prev => [...prev.slice(0, index + 1), {"type": "paragraph", "text": ""}, ...prev.slice(index + 1)]);
+function addBlock(setBlocks, index) {
+  setBlocks(prev => [...prev.slice(0, index + 1), {"type": "paragraph", "text": ""}, ...prev.slice(index + 1)]);
   selectedIndex = index + 1;
 }
 
 /** Deletes an existing block */
-function deleteTextBox(setTextBoxes, index) {
+function deleteBlock(setBlocks, index) {
 
-  setTextBoxes(prev => {
+  setBlocks(prev => {
     if (prev.length === 2) return prev;
 
     const tmp = [...prev];
@@ -347,8 +347,8 @@ function deleteTextBox(setTextBoxes, index) {
 }
 
 /** Replaces current block with an image block */
-async function insertImage(setTextBoxes, index, image) {
-  setTextBoxes(prev => {
+async function insertImage(setBlocks, index, image) {
+  setBlocks(prev => {
     const tmp = [...prev];
     tmp.splice(index, 1, {"type": "image", "image": image})
 
@@ -360,21 +360,25 @@ async function insertImage(setTextBoxes, index, image) {
 }
 
 /** Move block from 'index1' to after 'index2' */
-function moveTextBox(setTextBoxes, index1, index2) {
-  setTextBoxes(prev => {
+function moveBlock(setBlocks, index1, index2) {
+  setBlocks(prev => {
     const tmp = [...prev];
     const [removed] = tmp.splice(index1, 1);
     const insertIndex = index1 < index2 ? index2 - 1 : index2;
     tmp.splice(insertIndex + 1, 0, removed);
+
+    selectedIndex = index2;
+    while (tmp[selectedIndex].type === "image") selectedIndex--;
+
     return tmp;
   });
 }
 
-function handleDragStart(e, index, setTextBoxes) {
+function handleDragStart(e, index, setBlocks) {
   if (dragClone) return;
 
   // Create semi-transparent version of block to be displayed while dragging
-  const block = e.target.closest('.textbox');
+  const block = e.target.closest('.block');
   const dragImage = block.cloneNode(true);
 
   dragImage.removeChild(dragImage.getElementsByClassName("block-side-handle")[0]);
@@ -388,11 +392,13 @@ function handleDragStart(e, index, setTextBoxes) {
 
   // Pass on index of block to be moved
   currentlyDragging = index;
-  window.addEventListener("mouseup", () => handleDragEnd(setTextBoxes));
+  window.addEventListener("mouseup", () => handleDragEnd(setBlocks));
+  console.log(window.scrollY);
 }
 
-function handleDragEnd(setTextBoxes) {
+function handleDragEnd(setBlocks) {
   if (!dragClone) return;
+  console.log(window.scrollY);
 
   dragClone.remove();
   dragClone = null;
@@ -400,7 +406,7 @@ function handleDragEnd(setTextBoxes) {
   window.removeEventListener("mouseup", handleDragEnd);
 
   if (currentlyHovering !== currentlyDragging && currentlyHovering !== -1) {
-    moveTextBox(setTextBoxes, currentlyDragging, currentlyHovering);
+    moveBlock(setBlocks, currentlyDragging, currentlyHovering);
   }
 }
 
@@ -408,12 +414,12 @@ function handleDragEnd(setTextBoxes) {
 /* - CONTROL - */
 
 /**
- * Controls the placeholder of the input textbox.
+ * Controls the placeholder of the input block.
  * For paragraphs: it shows only when empty and selected.
  * For headings: it shows always when empty.
  * 
  * TODO: headings' placeholders should stay put, but implementing this proved unnecessary complicated
- * because it requires some state management acrobatics over the current implementation of textBoxes.
+ * because it requires some state management acrobatics over the current implementation of blocks.
 */
 function controlPlaceholder(selected, target, placeholder) {
   if (selected && target.value === "") {
@@ -440,30 +446,30 @@ function toggleMenu(show, setShowMenu) {
 }
 
 /** Handles specific keys pressed at input box */
-function handleKeyPress(e, textBoxes, setTextBoxes, index) {
+function handleKeyPress(e, blocks, setBlocks, index) {
   
   // Add new block on Shift + Enter
   if (e.key === "Enter" && e.shiftKey
       && e.target.selectionStart !== e.target.value.length) { 
     e.preventDefault();
-    addTextBox(setTextBoxes, index);
+    addBlock(setBlocks, index);
   }
   // Add new block on Enter if end of line is selected
   else if (e.key === "Enter" && !e.shiftKey
       && e.target.selectionStart === e.target.selectionEnd && e.target.selectionStart === e.target.value.length) {
     e.preventDefault();
-    addTextBox(setTextBoxes, index);
+    addBlock(setBlocks, index);
   }
   // Delete block on Backspace
   else if (e.key === "Backspace" && e.target.value === "" && index !== 0) {
     e.preventDefault();
-    deleteTextBox(setTextBoxes, index);
+    deleteBlock(setBlocks, index);
   }
 
   // Delete last image/callout on Backspace if cursor is at the beginning of the line
   if (e.key === "Backspace" && e.target.selectionStart == 0 && index !== 0
-    && textBoxes[index - 1].type === "image" || textBoxes[index - 1].type === "callout") {
-      deleteTextBox(setTextBoxes, index - 1);
+    && blocks[index - 1].type === "image" || blocks[index - 1].type === "callout") {
+      deleteBlock(setBlocks, index - 1);
   }
 }
 
