@@ -90,7 +90,7 @@ function Document() {
 
       {/* Body */} {
         textBoxes.map((box, index) => {
-          return <TextBox index={index} type={box.type} content={box}
+          return <TextBox index={index} key={index} type={box.type} content={box}
                           textBoxes={textBoxes} setTextBoxes={setTextBoxes}
                           showMenu={showMenu} setShowMenu={setShowMenu}
                           showQR={showQR} setShowQR={setShowQR} />;
@@ -121,8 +121,7 @@ function TextBox(props) {
     } else {
       ref.current.children[0].parentElement.classList.remove("hover-line"); 
     }
-  }, [mousePos]);
-
+  });
 
   // Stuff that goes inside the block goes in here.
   // The significant elements (the input box, the image, etc.) must go on top, to be accessed using children[0].
@@ -131,7 +130,7 @@ function TextBox(props) {
         ref={ref}
       
         style={{
-          height: boxHeight,
+          height: boxHeight || "",
           marginTop: FONTS[props.type].margin,
         }}
       >
@@ -147,12 +146,14 @@ function TextBox(props) {
 
     {/* Image */}
     { props.type === "image" ?
-      <ImageBox image={props.content.image} />
+      <ImageBox image={props.content.image}
+        boxHeight={boxHeight} setBoxHeight={setBoxHeight} />
     : null }
 
     {/* Callout */}
     { props.type === "callout" ?
-      <Callout text={props.content.text} link={props.content.link} image={props.content.image} />
+      <Callout text={props.content.text} link={props.content.link} image={props.content.image}
+        boxHeight={boxHeight} setBoxHeight={setBoxHeight} />
     : null }
 
 
@@ -189,6 +190,8 @@ function InputBox(props) {
   });
 
   return <textarea type="text"
+
+    // className="hover-line"
   
     value={props.text}
 
@@ -239,8 +242,16 @@ function InputBox(props) {
 }
 
 function ImageBox(props) {
+
+  // Set height of block to height of image
+  const ref = useRef(null);
+  useEffect(() => {
+    const height = ref.current.offsetHeight;
+    props.setBoxHeight(height);
+  });
+
   return (
-    <div className="image-container">
+    <div className="image-container" ref={ref}>
       <img className="imagebox" src={props.image} />
 
       <img className="image-buttons" src={image_buttons}/>
@@ -256,8 +267,16 @@ function ImageBox(props) {
 }
 
 function Callout(props) {
+
+  // Set height of block to height of callout
+  const ref = useRef(null);
+  useEffect(() => {
+    const height = ref.current.offsetHeight;
+    props.setBoxHeight(height);
+  });
+
   return (
-    <div className="callout"
+    <div className="callout" ref={ref}
 
       style={{ 
         fontSize: FONTS["callout"].size,
@@ -328,7 +347,7 @@ function deleteTextBox(setTextBoxes, index) {
 }
 
 /** Replaces current block with an image block */
-async function insertImage(textBoxes, setTextBoxes, index, image) {
+async function insertImage(setTextBoxes, index, image) {
   setTextBoxes(prev => {
     const tmp = [...prev];
     tmp.splice(index, 1, {"type": "image", "image": image})
@@ -336,6 +355,17 @@ async function insertImage(textBoxes, setTextBoxes, index, image) {
     selectedIndex = index - 1;
     while (tmp[selectedIndex].type === "image") selectedIndex--;
 
+    return tmp;
+  });
+}
+
+/** Move block from 'index1' to after 'index2' */
+function moveTextBox(setTextBoxes, index1, index2) {
+  setTextBoxes(prev => {
+    const tmp = [...prev];
+    const [removed] = tmp.splice(index1, 1);
+    const insertIndex = index1 < index2 ? index2 - 1 : index2;
+    tmp.splice(insertIndex + 1, 0, removed);
     return tmp;
   });
 }
@@ -370,11 +400,7 @@ function handleDragEnd(setTextBoxes) {
   window.removeEventListener("mouseup", handleDragEnd);
 
   if (currentlyHovering !== currentlyDragging && currentlyHovering !== -1) {
-    setTextBoxes(prev => {
-      const tmp = [...prev];
-      tmp.splice(currentlyHovering, 0, tmp.splice(currentlyDragging, 1)[0]);
-      return tmp;
-    });
+    moveTextBox(setTextBoxes, currentlyDragging, currentlyHovering);
   }
 }
 
@@ -458,12 +484,12 @@ function getCurrentlyHovered(el, mousePos, index) {
   const rect = el.getBoundingClientRect();
   const isCurrentlyHovering = mousePos.x > rect.left - MOUSE_HOVER_OFFSET &&
                               mousePos.x < rect.left + rect.width + MOUSE_HOVER_OFFSET &&
-                              mousePos.y > rect.top &&
-                              mousePos.y < rect.top + rect.height;
+                              mousePos.y > rect.top + rect.height - 20 &&
+                              mousePos.y < rect.top + rect.height + 20;
 
   currentlyHovering = isCurrentlyHovering ? index : currentlyHovering;
-  
-  if (isCurrentlyHovering) {
+
+  if (currentlyHovering === index) {
     el.parentElement.classList.add("hover-line");
   } else {
     el.parentElement.classList.remove("hover-line");
