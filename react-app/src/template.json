@@ -9,14 +9,14 @@
 	{"type": "paragraph", "text": ""},
 	{"type": "heading2", "text": "Behind the curtain"},
 	{"type": "paragraph", "text": "I built the front-end you're currently seeing using React. The server-side runs on Node.js, which is hosted on an AWS Elastic Beanstalk. The drawing app is plain JavaScript, which Express serves after queuing each request in an SQLite database. The QR code is generated together with a unique ID that stands for user credentials. It's not meant to be more complicated than it needs to be."},
-	{"type": "image", "image": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/5ebb427d-38b3-47d1-9239-308d97392b2f/map3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230223%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230223T144115Z&X-Amz-Expires=86400&X-Amz-Signature=56ee11acebdf4435d3f88edb4769bbd0757ae2c06ab9a0187842325c330810cd&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22map3.png%22&x-id=GetObject"},
+	{"type": "image", "image": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/5ebb427d-38b3-47d1-9239-308d97392b2f/map3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230226%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230226T174650Z&X-Amz-Expires=86400&X-Amz-Signature=0d142454a455d4b921a33515aa82f3c1f5adbbf35047c4c05e9a4dcec6b78e9f&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22map3.png%22&x-id=GetObject"},
 	{"type": "paragraph", "text": ""},
 	{"type": "paragraph", "text": "You will find the code right here:"},
 	{
 		"type": "callout",
 		"text": "The GitHub repo",
 		"link": "https://github.com/BrianKo14/NotionNew",
-		"image": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/bd962c32-e1a1-43d5-aef1-19be3e4e48f2/25231.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230223%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230223T172151Z&X-Amz-Expires=86400&X-Amz-Signature=e7633201a086f727e644a2b82063ff66bdd1e4716a8bfb6117032d6a7ef01e80&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%2225231.png%22&x-id=GetObject"
+		"image": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/bd962c32-e1a1-43d5-aef1-19be3e4e48f2/25231.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230226%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230226T174611Z&X-Amz-Expires=86400&X-Amz-Signature=6cee6fc3870786385a7904ee1866ed0f0d9bcfb12e1ff15aedd4399902337eb1&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%2225231.png%22&x-id=GetObject"
 	},
 	{"type": "paragraph", "text": ""},
 	{"type": "heading1", "text": "About me"},
@@ -26,8 +26,8 @@
 	{
 		"type": "callout",
 		"text": "My resumé",
-		"link": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/079a14f7-cd74-4da4-b5f8-07b6f1815007/resume-feb-23-optim.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230224%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230224T132326Z&X-Amz-Expires=86400&X-Amz-Signature=2bdb3363e2fc5cbfa27b9170b79b1e4fbdcb71e47cdefc5d3301c1d395ce6191&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22resume-feb-23-optim.jpg%22&x-id=GetObject",
-		"image": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6bb6f18c-fc4f-4ae2-9569-89779a48c793/paperclip_1f4ce.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230223%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230223T172330Z&X-Amz-Expires=86400&X-Amz-Signature=ede063a4210cd5ca6b6278d43d1e20c57c3c250d94bed38e0343124522dde239&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22paperclip_1f4ce.png%22&x-id=GetObject"
+		"link": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/079a14f7-cd74-4da4-b5f8-07b6f1815007/resume-feb-23-optim.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230226%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230226T174624Z&X-Amz-Expires=86400&X-Amz-Signature=90ede542f0f826ed82049a256a4ec2c39afb6b68be074d65828eedb650beb334&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22resume-feb-23-optim.jpg%22&x-id=GetObject",
+		"image": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6bb6f18c-fc4f-4ae2-9569-89779a48c793/paperclip_1f4ce.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230226%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230226T174546Z&X-Amz-Expires=86400&X-Amz-Signature=e07a5a00a47dba14ccbb98f92430812a51292b7125e80ec09d742c022e07a28b&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22paperclip_1f4ce.png%22&x-id=GetObject"
 	},
 	{"type": "paragraph", "text": ""},
 	{"type": "paragraph", "text": "Thank you for taking the time to check out my project! I hope it gives you an idea of my skills and what I can bring to the table. If you have any questions, please don't hesitate to reach out to me. I look forward to hearing from you!"},
@@ -36,6 +36,6 @@
 		"type": "callout",
 		"text": "brian.ilank@gmail.com",
 		"link": "mailto:brian.ilank@gmail.com",
-		"image": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/191f5ca3-44c8-4227-9344-5ae690184ded/envelope_2709-fe0f.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230223%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230223T182607Z&X-Amz-Expires=86400&X-Amz-Signature=9fef121541078f395fea61c714b1b2759ac5cc59634eb2403e11a6c6c70ecfc8&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22envelope_2709-fe0f.png%22&x-id=GetObject"
+		"image": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/191f5ca3-44c8-4227-9344-5ae690184ded/envelope_2709-fe0f.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230226%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230226T174439Z&X-Amz-Expires=86400&X-Amz-Signature=05d0f13d7aafe8a031dcdee2e4dc9dd6f4888df3fdf810716cc3c7d70e423350&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22envelope_2709-fe0f.png%22&x-id=GetObject"
 	}
 ]

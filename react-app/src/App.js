@@ -1,4 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+
+/* --- IMPORTS --- */
+
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 // Media imports
 import static_navigationbar_right from './media/static-navigationbar-right.png';
@@ -17,6 +20,8 @@ import QRWindow from './QRWindow';
 const { cancelDrawingRequest } = require('./client.js');
 
 
+/* --- GLOBAL VARIABLES --- */
+
 /** Distance from the block proper where the side handle still shows. */
 const MOUSE_HOVER_OFFSET = 120;
 
@@ -27,8 +32,17 @@ var selectedIndex = 4;
  * Used to flip menu when it's too close to the top. */
 var positionFromTop = 0;
 
+/** Stores semi-transperent clone that appears when dragging. */
+var dragClone = null;
 
-/* APP */
+/** Element index that is currently being hovered over, while dragging. */
+var currentlyHovering = -1;
+
+/** Element index that is currently being dragged. */
+var currentlyDragging = -1;
+
+
+/* --- APP --- */
 
 function App() {
   return (
@@ -40,7 +54,7 @@ function App() {
 }
 
 
-/* NAVIGATION BAR */
+/* --- NAVIGATION BAR --- */
 
 function NavigationBar() {
   return (
@@ -52,12 +66,12 @@ function NavigationBar() {
 }
 
 
-/* DOCUMENT */
+/* --- DOCUMENT --- */
 
 function Document() {
   
   const [textBoxes, setTextBoxes] = useState(TEMPLATE);
-  
+
   const [showMenu, setShowMenu] = useState(false);
   const [showQR, setShowQR] = useState(false);
 
@@ -86,7 +100,7 @@ function Document() {
 }
 
 
-/* TEXTBOX */
+/* --- TEXTBOX --- */
 
 function TextBox(props) {
 
@@ -95,11 +109,20 @@ function TextBox(props) {
 
   // Control "side handle" visibility with mouse position
   const [isHovering, setIsHovering] = useState(false);
-  const mousePos = useMousePosition();
   const ref = useRef(null);
+  const mousePos = useMousePosition(ref.current);
   useEffect(() => {
     controlSideHandle(ref.current.children[0], mousePos, setIsHovering);
+
+    if (dragClone) {
+      dragClone.style.top = mousePos.y + "px";
+      dragClone.style.left = mousePos.x + "px";
+      getCurrentlyHovered(ref.current.children[0], mousePos, props.index);
+    } else {
+      ref.current.children[0].parentElement.classList.remove("hover-line"); 
+    }
   }, [mousePos]);
+
 
   // Stuff that goes inside the block goes in here.
   // The significant elements (the input box, the image, etc.) must go on top, to be accessed using children[0].
@@ -111,7 +134,6 @@ function TextBox(props) {
           height: boxHeight,
           marginTop: FONTS[props.type].margin,
         }}
-
       >
 
     {/* Input */}
@@ -259,6 +281,10 @@ function BlockSideHandle(props) {
     setLeftDist(sibling - parent - 45);
   }, []);
 
+  const dragStartCallback = useCallback((e) => {
+    handleDragStart(e, props.index, props.textBoxes, props.setTextBoxes);
+  }, [props.index, props.textBoxes, props.setTextBoxes]);
+
   return (
     <div className="block-side-handle" ref={ref} 
       style={{
@@ -267,13 +293,15 @@ function BlockSideHandle(props) {
       }}
     >
       <img src={add_button} onClick={() => addTextBox(props.textBoxes, props.setTextBoxes, props.index)} />
-      <img src={drag_button} />
+      <img src={drag_button} onMouseDown={dragStartCallback} />
     </div>
   );
 }
 
 
-/* AUXILIARIES */
+/* --- AUXILIARIES --- */
+
+/* - CHANGING BLOCKS - */
 
 /** Adds a new block */
 function addTextBox(textBoxes, setTextBoxes, index) {
@@ -306,6 +334,48 @@ async function insertImage(textBoxes, setTextBoxes, index, image) {
 	while (textBoxes[selectedIndex].type === "image") selectedIndex--;
 }
 
+function handleDragStart(e, index, setTextBoxes) {
+  if (dragClone) return;
+
+  // Create semi-transparent version of block to be displayed while dragging
+  const block = e.target.closest('.textbox');
+  const dragImage = block.cloneNode(true);
+
+  dragImage.removeChild(dragImage.getElementsByClassName("block-side-handle")[0]);
+  dragImage.style.position = "fixed";
+  dragImage.style.top = "-10000px";
+  dragImage.style.left = "-10000px";
+  dragImage.children[0].style.width = block.children[0].offsetWidth + "px";
+  dragImage.style.opacity = 0.5;
+  dragClone = dragImage;
+  document.body.appendChild(dragImage); 
+
+
+  // Pass on index of block to be moved
+  currentlyDragging = index;
+  window.addEventListener("mouseup", () => handleDragEnd(setTextBoxes));
+}
+
+function handleDragEnd(setTextBoxes) {
+  if (!dragClone) return;
+
+  dragClone.remove();
+  dragClone = null;
+
+  window.removeEventListener("mouseup", handleDragEnd);
+
+  if (currentlyHovering !== currentlyDragging && currentlyHovering !== -1) {
+    setTextBoxes(prev => {
+      const tmp = [...prev];
+      tmp.splice(currentlyHovering, 0, tmp.splice(currentlyDragging, 1)[0]);
+      return tmp;
+    });
+  }
+}
+
+
+/* - CONTROL - */
+
 /**
  * Controls the placeholder of the input textbox.
  * For paragraphs: it shows only when empty and selected.
@@ -324,14 +394,7 @@ function controlPlaceholder(selected, target, placeholder) {
   }
 }
 
-function controlSideHandle(el, mousePos, setIsHovering) {
-  const rect = el.getBoundingClientRect();
-  setIsHovering(mousePos.x > rect.left - MOUSE_HOVER_OFFSET &&
-                mousePos.x < rect.left + rect.width + MOUSE_HOVER_OFFSET &&
-                mousePos.y > rect.top &&
-                mousePos.y < rect.top + rect.height);
-}
-
+/** When the menu appears, window-wide scrolling should be disabled. */
 function toggleMenu(show, setShowMenu) {
   setShowMenu(show);
 
@@ -371,6 +434,35 @@ function handleKeyPress(e, textBoxes, setTextBoxes, index) {
     && textBoxes[index - 1].type === "image" || textBoxes[index - 1].type === "callout") {
       deleteTextBox(textBoxes, setTextBoxes, index - 1);
   }
+}
+
+
+/* - MOUSE - */
+
+/** Decides when to show side handle */
+function controlSideHandle(el, mousePos, setIsHovering) {
+  const rect = el.getBoundingClientRect();
+  setIsHovering(mousePos.x > rect.left - MOUSE_HOVER_OFFSET &&
+                mousePos.x < rect.left + rect.width + MOUSE_HOVER_OFFSET &&
+                mousePos.y > rect.top &&
+                mousePos.y < rect.top + rect.height);
+}
+
+/** Decides over to which block will the current selection be dragged to */
+function getCurrentlyHovered(el, mousePos, index) {
+  const rect = el.getBoundingClientRect();
+  const isCurrentlyHovering = mousePos.x > rect.left - MOUSE_HOVER_OFFSET &&
+                              mousePos.x < rect.left + rect.width + MOUSE_HOVER_OFFSET &&
+                              mousePos.y > rect.top &&
+                              mousePos.y < rect.top + rect.height;
+
+  currentlyHovering = isCurrentlyHovering ? index : currentlyHovering;
+  
+  if (isCurrentlyHovering) {
+    el.parentElement.classList.add("hover-line");
+  } else {
+    el.parentElement.classList.remove("hover-line");
+  } 
 }
 
 /** Gets mouse position to detect hovering for the BlockSideHandle.

@@ -65,6 +65,16 @@
   width: 100%; 
   top: 30px;
   margin-bottom: 14px;
+
+}
+
+.hover-line::after {
+  content: "";
+  position: absolute;
+  bottom: -14px;
+  left: 0;
+  width: 100%;
+  border-bottom: 4px solid #A9CBF5;
 }
 
 /* Text */
