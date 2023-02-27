@@ -223,9 +223,11 @@ function InputBox(props) {
       controlPlaceholder(true, e.target, FONTS[props.type].placeholder);
 
       // Update text in state
-      const tmp = [...props.textBoxes];
-      tmp[props.index].text = e.target.value;
-      props.setTextBoxes(tmp);
+      props.setTextBoxes(prev => {
+        const tmp = [...prev];
+        tmp[props.index].text = e.target.value;
+        return tmp;
+      });
 
       // Show menu if user types '/'
       toggleMenu(e.target.value[0] === '/', props.setShowMenu);
@@ -282,7 +284,7 @@ function BlockSideHandle(props) {
   }, []);
 
   const dragStartCallback = useCallback((e) => {
-    handleDragStart(e, props.index, props.textBoxes, props.setTextBoxes);
+    handleDragStart(e, props.index, props.setTextBoxes);
   }, [props.index, props.textBoxes, props.setTextBoxes]);
 
   return (
@@ -292,7 +294,7 @@ function BlockSideHandle(props) {
         top: `calc((${FONTS[props.type].size} + 0.5em) / 2)`
       }}
     >
-      <img src={add_button} onClick={() => addTextBox(props.textBoxes, props.setTextBoxes, props.index)} />
+      <img src={add_button} onClick={() => addTextBox(props.setTextBoxes, props.index)} />
       <img src={drag_button} onMouseDown={dragStartCallback} />
     </div>
   );
@@ -304,34 +306,38 @@ function BlockSideHandle(props) {
 /* - CHANGING BLOCKS - */
 
 /** Adds a new block */
-function addTextBox(textBoxes, setTextBoxes, index) {
-  const tmp = [...textBoxes];
-  tmp.splice(index + 1, 0, {"type": "paragraph", "text": ""})
-  setTextBoxes(tmp);
-
+function addTextBox(setTextBoxes, index) {
+  setTextBoxes(prev => [...prev.slice(0, index + 1), {"type": "paragraph", "text": ""}, ...prev.slice(index + 1)]);
   selectedIndex = index + 1;
 }
 
 /** Deletes an existing block */
-function deleteTextBox(textBoxes, setTextBoxes, index) {
-  if (textBoxes.length === 2) return;
+function deleteTextBox(setTextBoxes, index) {
 
-  const tmp = [...textBoxes];
-  tmp.splice(index, 1);
-  setTextBoxes(tmp);
+  setTextBoxes(prev => {
+    if (prev.length === 2) return prev;
 
-  selectedIndex = index - 1;
-  while (textBoxes[selectedIndex].type === "image") selectedIndex--;
+    const tmp = [...prev];
+    tmp.splice(index, 1);
+
+    selectedIndex = index - 1;
+    while (tmp[selectedIndex].type === "image") selectedIndex--;
+
+    return tmp;
+  });
 }
 
 /** Replaces current block with an image block */
 async function insertImage(textBoxes, setTextBoxes, index, image) {
-	const tmp = [...textBoxes];
-	tmp.splice(index, 1, {"type": "image", "image": image})
-	setTextBoxes(tmp);
+  setTextBoxes(prev => {
+    const tmp = [...prev];
+    tmp.splice(index, 1, {"type": "image", "image": image})
 
-	selectedIndex = index - 1;
-	while (textBoxes[selectedIndex].type === "image") selectedIndex--;
+    selectedIndex = index - 1;
+    while (tmp[selectedIndex].type === "image") selectedIndex--;
+
+    return tmp;
+  });
 }
 
 function handleDragStart(e, index, setTextBoxes) {
@@ -349,7 +355,6 @@ function handleDragStart(e, index, setTextBoxes) {
   dragImage.style.opacity = 0.5;
   dragClone = dragImage;
   document.body.appendChild(dragImage); 
-
 
   // Pass on index of block to be moved
   currentlyDragging = index;
@@ -415,24 +420,24 @@ function handleKeyPress(e, textBoxes, setTextBoxes, index) {
   if (e.key === "Enter" && e.shiftKey
       && e.target.selectionStart !== e.target.value.length) { 
     e.preventDefault();
-    addTextBox(textBoxes, setTextBoxes, index);
+    addTextBox(setTextBoxes, index);
   }
   // Add new block on Enter if end of line is selected
   else if (e.key === "Enter" && !e.shiftKey
       && e.target.selectionStart === e.target.selectionEnd && e.target.selectionStart === e.target.value.length) {
     e.preventDefault();
-    addTextBox(textBoxes, setTextBoxes, index);
+    addTextBox(setTextBoxes, index);
   }
   // Delete block on Backspace
   else if (e.key === "Backspace" && e.target.value === "" && index !== 0) {
     e.preventDefault();
-    deleteTextBox(textBoxes, setTextBoxes, index);
+    deleteTextBox(setTextBoxes, index);
   }
 
   // Delete last image/callout on Backspace if cursor is at the beginning of the line
   if (e.key === "Backspace" && e.target.selectionStart == 0 && index !== 0
     && textBoxes[index - 1].type === "image" || textBoxes[index - 1].type === "callout") {
-      deleteTextBox(textBoxes, setTextBoxes, index - 1);
+      deleteTextBox(setTextBoxes, index - 1);
   }
 }
 
