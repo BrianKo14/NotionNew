@@ -3,6 +3,13 @@
 
 This project is a small replica of Notion that includes a new feature for making drawings with your phone and adding them to your projects. I built it as a demonstration to showcase my skills and interest in working at Notion.
 
+<br />
+<img src="https://notionnew-images.s3.amazonaws.com/mindmap.png">
+<br />
+Check out the live version here: <a href="http://notionnew.us-east-1.elasticbeanstalk.com/" target="_blank">http://notionnew.us-east-1.elasticbeanstalk.com/</a>
+
+<br />
+
 ## Development instructions
 
 `react-app` is the front-end for the desktop part, the actual Notion replica. It needs to be compiled and put inside the `public` directory of the server.
