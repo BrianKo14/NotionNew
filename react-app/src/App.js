@@ -168,14 +168,13 @@ function Block(props) {
 
     {/* Menu */}
     { props.showMenu && props.index === window.selectedIndex ? 
-      <Menu setShowMenu={props.setShowMenu}
-        setShowQR={props.setShowQR} />
+      <Menu setShowMenu={props.setShowMenu} setShowQR={props.setShowQR} />
     : null }
 
     {/* QR Window */}
     { props.showQR && props.index === window.selectedIndex ? 
-      <QRWindow setShowQR={props.setShowQR}
-        blocks={props.blocks} setBlocks={props.setBlocks} index={props.index}
+      <QRWindow setShowQR={props.setShowQR} index={props.index}
+        blocks={props.blocks} setBlocks={props.setBlocks} 
         insertImage={insertImage} /> 
     : null }
 

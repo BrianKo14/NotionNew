@@ -12,8 +12,8 @@ function Menu(props) {
  return (
 	<div className="menu"
 		style={{
-			top: props.positionFromTop > 0.5 ? '0' : '350px',
-			transform: props.positionFromTop > 0.5 ? 'translate(2%, -105%)' : 'translate(2%, -90%)'
+			top: window.positionFromTop > 0.5 ? '0' : '350px',
+			transform: window.positionFromTop > 0.5 ? 'translate(2%, -105%)' : 'translate(2%, -90%)'
 		}}
 
 		tabIndex={-1}

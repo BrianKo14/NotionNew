@@ -1,4 +1,4 @@
-import {useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import image_buttons from '../media/image_buttons.png';
 
 function ImageBox(props) {

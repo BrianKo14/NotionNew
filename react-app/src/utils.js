@@ -15,13 +15,18 @@ var currentlyDragging = -1;
 
 /** Adds a new block */
 export function addBlock(setBlocks, index) {
-  setBlocks(prev => [...prev.slice(0, index + 1), {"type": "paragraph", "text": ""}, ...prev.slice(index + 1)]);
-  window.selectedIndex = index + 1;
+  setBlocks(prev => {
+    const tmp = [...prev];
+    tmp.splice(index + 1, 0, {"type": "paragraph", "text": ""});
+
+    window.selectedIndex = index + 1;
+
+    return tmp;
+  });
 }
 
 /** Deletes an existing block */
 export function deleteBlock(setBlocks, index) {
-
   setBlocks(prev => {
     if (prev.length === 2) return prev;
 
@@ -29,7 +34,7 @@ export function deleteBlock(setBlocks, index) {
     tmp.splice(index, 1);
 
     window.selectedIndex = index - 1;
-    while (tmp[window.selectedIndex].type === "image") window.selectedIndex--;
+    while (["image", "callout"].includes(tmp[window.selectedIndex].type)) window.selectedIndex--;
 
     return tmp;
   });
@@ -42,7 +47,7 @@ export async function insertImage(setBlocks, index, image) {
     tmp.splice(index, 1, {"type": "image", "image": image})
 
     window.selectedIndex = index - 1;
-    while (tmp[window.selectedIndex].type === "image") window.selectedIndex--;
+    while (["image", "callout"].includes(tmp[window.selectedIndex].type)) window.selectedIndex--;
 
     return tmp;
   });
@@ -57,7 +62,7 @@ export function moveBlock(setBlocks, index1, index2) {
     tmp.splice(insertIndex + 1, 0, removed);
 
     window.selectedIndex = index2;
-    while (tmp[window.selectedIndex].type === "image") window.selectedIndex--;
+    while (["image", "callout"].includes(tmp[window.selectedIndex].type)) window.selectedIndex--;
 
     return tmp;
   });
@@ -153,8 +158,8 @@ export function handleKeyPress(e, blocks, setBlocks, index) {
   }
 
   // Delete last image/callout on Backspace if cursor is at the beginning of the line
-  if (e.key === "Backspace" && e.target.selectionStart == 0 && index !== 0
-    && blocks[index - 1].type === "image" || blocks[index - 1].type === "callout") {
+  if (e.key === "Backspace" && e.target.selectionStart === 0 && index !== 0
+    && ["image", "callout"].includes(blocks[index - 1].type)) {
       deleteBlock(setBlocks, index - 1);
   }
 }

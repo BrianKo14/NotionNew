@@ -36,8 +36,8 @@ function QRWindow(props) {
 	return (
 		<div className="qrwindow"
 			style={{
-				top: props.positionFromTop > 0.5 ? '0' : '350px',
-				transform: props.positionFromTop > 0.5 ? 'translate(2%, -105%)' : 'translate(2%, -90%)'
+				top: window.positionFromTop > 0.5 ? '0' : '350px',
+				transform: window.positionFromTop > 0.5 ? 'translate(2%, -105%)' : 'translate(2%, -90%)'
 			}}
 		>
 			<div className="qrwindow-header">Scan this QR code with your <br /><span>mobile device</span> and make a drawing!</div>
@@ -50,7 +50,7 @@ async function getDrawingAfterPolling(props) {
 	const dataURL = await getDrawing();
 
 	if (dataURL !== null)
-		props.insertImage(props.textBoxes, props.setTextBoxes, props.index, dataURL);
+		props.insertImage(props.setBlocks, props.index, dataURL);
 }
 
 export default QRWindow;
