@@ -81,8 +81,6 @@ function Document() {
   useEffect(() => {
     const selectedBlock = document.querySelectorAll(".block")[window.selectedIndex].querySelector("textarea");
     selectedBlock.focus();
-    selectedBlock.selectionStart = selectedBlock.value.length;
-    selectedBlock.selectionEnd = selectedBlock.value.length;
   }, [blocks]);
 
   return (
@@ -109,7 +107,7 @@ function Block(props) {
   // Height of block changes with number of lines
   const [boxHeight, setBoxHeight] = useState(0);
 
-  // Control "side handle" visibility with mouse position
+  // Mouse position updates
   const [isHovering, setIsHovering] = useState(false);
   const ref = useRef(null);
   const mousePos = useMousePosition(ref.current);

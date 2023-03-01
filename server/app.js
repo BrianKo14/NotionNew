@@ -38,10 +38,6 @@ app.get('/drawing', (req, res) => {
 
 // Generate a unique drawing ID for each user and store it in a waitlist marked as "pending"
 app.get('/api/unique-drawing-id', async (req, res) => {
-
-	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
-	// res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-
 	const newId = Math.floor(Math.random() * 1000000); // TODO: use a unique ID generator
 	await drawings.addUser(newId);
 
@@ -50,10 +46,6 @@ app.get('/api/unique-drawing-id', async (req, res) => {
 
 // Cancel request for drawing. Will delete entry from waitlist
 app.get('/api/cancel-request', async (req, res) => {
-
-	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
-	// res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-
 	await drawings.deleteUser(req.query.id);
 
 	res.sendStatus(200);
@@ -71,10 +63,6 @@ app.post('/api/save-drawing', async (req, res) => {
 
 // Check if drawing is available
 app.get('/api/check-status', async (req, res) => {
-
-	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
-	// res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-
 	const id = req.query.id;
 	const status = await drawings.checkStatus(id);
 	res.send(!!status);
@@ -82,10 +70,6 @@ app.get('/api/check-status', async (req, res) => {
 
 // Check if ID is in database
 app.get('/api/check-id', async (req, res) => {
-
-	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
-	// res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-
 	const id = req.query.id;
 	const exists = await drawings.checkId(id);
 	res.send(!!exists);
@@ -93,10 +77,6 @@ app.get('/api/check-id', async (req, res) => {
 
 // Fetch drawing URL data from database
 app.get('/api/get-drawing', async (req, res) => {
-
-	// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
-	// res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-
 	const id = req.query.id;
 	const data = await drawings.getDrawing(id);
 	res.send(data);

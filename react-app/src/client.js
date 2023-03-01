@@ -1,6 +1,5 @@
 
 export const serverURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-// export const serverURL = 'http://192.168.0.148:3001'; // DEBUG: local IP address
 
 const POLL_INTERVAL = 1000;
 

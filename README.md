@@ -3,7 +3,7 @@
 
 This project is a small replica of Notion that includes a new feature for making drawings with your phone and adding them to your projects. I built it as a demonstration to showcase my skills and interest in working at Notion.
 
-Check out the live version here: <a href="http://notionnew.us-east-1.elasticbeanstalk.com/" target="_blank">http://notionnew.us-east-1.elasticbeanstalk.com/</a>
+Check out the live version here: <a href="https://www.newnotion.site/" target="_blank">https://www.newnotion.site/</a>
 
 <br />
 
