@@ -14,24 +14,30 @@ process.on('SIGINT', () => {
 	process.exit();
 });
 
+const MAX_REQUESTS = 1000;
 
-/* PUBLIC METHODS */
 
 /** Creates 'users' table in database.
  * 
  * The table has three columns:
  * - id: unique user ID
  * - status: TRUE if drawing has been received, FALSE if drawing is still expected
+ * - date: number of milliseconds elapsed since Jan 1 1970
  * - drawing: blob of drawing data, like 'data:image/png;base64,...'
 */
 exports.initializeDatabase = async function() {
-	const result = await db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, status BOOLEAN, drawing BLOB)');
+	const result = await db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, status BOOLEAN, date INTEGER, drawing BLOB)');
 	if (!result.error) console.log('Table created.')
 }
 
+
+
+/* --- EDIT --- */
+
 /** Adds new user to the waitlist. Will replace existing instances of same user. */
 exports.addUser = async function(id) {
-	const result = await db.run('INSERT OR REPLACE INTO users VALUES (?, ?, ?)' , [id, false, null]);
+	const date = Date.now();
+	const result = await db.run('INSERT OR REPLACE INTO users VALUES (?, ?, ?, ?)' , [id, false, date, null]);
 	if (result.error) console.log(result.error);
 }
 
@@ -48,6 +54,10 @@ exports.updateUser = async function(id, drawing) {
 	if (result.error) console.log(result.error);
 }
 
+
+
+/* --- CHECK --- */
+
 /** Returns TRUE if drawing is already available.
  * Returns FALSE if drawing is still expected.
  * Returns NULL if ID doesn't exist. */
@@ -61,8 +71,7 @@ exports.checkStatus = function(id) {
 	});
 }
 
-/** Returns TRUE if ID exists in database,
- * FALSE otherwise. */
+/** Returns TRUE iff ID exists in database */
 exports.checkId = function(id) {
 	return new Promise((resolve, reject) => {
 		db.get('SELECT id FROM users WHERE id = ?', [id], (err, row) => {
@@ -73,6 +82,19 @@ exports.checkId = function(id) {
 	});
 }
 
+/** Returns TRUE iff number of requests is under the maximum */
+exports.isFull = function() {
+	return new Promise((resolve, reject) => {
+		db.get('SELECT COUNT(*) AS count FROM users', (err, row) => {
+			if (err) console.log(err);
+			else resolve(row.count > MAX_REQUESTS);
+		});
+	});
+}
+
+
+
+/* --- GET --- */
 
 /** Returns drawing blob if ID matches status TRUE.
  * Returns NULL if ID doesn't exist. */

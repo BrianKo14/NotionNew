@@ -13,6 +13,12 @@ function QRWindow(props) {
 		async function generateQRCode() {
 
 			const uniqueId = await getUniqueID();
+			if (uniqueId === null) {
+				alert('Server is currently unavailable. Please try again later.');
+				props.setShowQR(false);
+				return;
+			}
+
 			const url = `${serverURL}/drawing?id=${uniqueId}`;
 
 			try {

@@ -23,7 +23,6 @@
 
 	font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 	color: rgba(55, 53, 47, 0.65);
-	/* text-transform: uppercase; */
 	text-align: center;
 	font-size: 14px;
 	font-weight: 500;
@@ -37,6 +36,7 @@
 
 .qrwindow-img {
 	position: relative;
+	display: none;
 
 	width: 65%;
 	left: 0;
@@ -46,10 +46,12 @@
 	user-select: none;
 	pointer-events: none;
 
-	/* border: 1px dashed rgba(55, 53, 47, 0.65); */
+	border: none;
 	box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px inset;
 	border-radius: 10px;
 
 	background-color: #F7F7F5;
 
 }
+
+.qrwindow-img[src*="data:image"] { display: inline-block; }

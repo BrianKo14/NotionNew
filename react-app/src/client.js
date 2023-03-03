@@ -14,6 +14,7 @@ var unique_id = null;
 export async function getUniqueID() {
 	try {
 		const response = await fetch(`${serverURL}/api/unique-drawing-id`);
+		if (response.status === 503) return null;
 		const json = await response.json();
 
 		if (unique_id !== null) return unique_id;

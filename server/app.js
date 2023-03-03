@@ -19,7 +19,7 @@ const limiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
 	max: 60 // limit each IP to 60 requests per windowMs
 });
-app.use(limiter);
+// app.use(limiter);
 
 /** Initiates server async.
  * Meaninig wait for database to initialize and then start listening. */
@@ -52,8 +52,12 @@ app.get('/drawing', (req, res) => {
 
 // Generate a unique drawing ID for each user and store it in a waitlist marked as "pending"
 app.get('/api/unique-drawing-id', async (req, res) => {
+	if (await drawings.isFull()) {
+		res.sendStatus(503);
+		return;
+	}
+
 	const newId = Math.floor(Math.random() * 1000000); // TODO: use a unique ID generator
-	console.log(req.ip);
 	await drawings.addUser(newId);
 
 	res.send('' + newId);
