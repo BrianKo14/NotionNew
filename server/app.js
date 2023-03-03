@@ -7,6 +7,20 @@ const drawings = require('./drawings');
 const app = express();
 app.use(express.json({ limit: '50mb' })); // allow large JSON bodies
 
+// DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
+app.use((req, res, next) => {
+	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+	next();
+});
+
+// Rate limiting
+const rateLimit = require('express-rate-limit');
+const limiter = rateLimit({
+	windowMs: 60 * 1000, // 1 minute
+	max: 60 // limit each IP to 60 requests per windowMs
+});
+app.use(limiter);
+
 /** Initiates server async.
  * Meaninig wait for database to initialize and then start listening. */
 async function startServer() {
@@ -39,6 +53,7 @@ app.get('/drawing', (req, res) => {
 // Generate a unique drawing ID for each user and store it in a waitlist marked as "pending"
 app.get('/api/unique-drawing-id', async (req, res) => {
 	const newId = Math.floor(Math.random() * 1000000); // TODO: use a unique ID generator
+	console.log(req.ip);
 	await drawings.addUser(newId);
 
 	res.send('' + newId);

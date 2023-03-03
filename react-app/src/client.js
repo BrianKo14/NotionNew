@@ -1,7 +1,11 @@
 
-export const serverURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+export var serverURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
 
-const POLL_INTERVAL = 1000;
+// DEBUG: local IP address
+if (serverURL.includes('localhost')) serverURL = 'http://192.168.0.179:3001'; 
+
+
+const POLL_INTERVAL = 2000;
 
 var unique_id = null;
 
