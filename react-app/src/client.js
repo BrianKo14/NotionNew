@@ -5,21 +5,27 @@ export var serverURL = window.location.protocol + '//' + window.location.hostnam
 if (serverURL.includes('localhost')) serverURL = 'http://192.168.0.179:3001'; 
 
 
-const POLL_INTERVAL = 2000;
+const POLL_INTERVAL = 3000;
 
 var unique_id = null;
 
 /** Requests server for assignment of a unique ID for this user.
- * The server will return then ID after storing it in a database marked as "pending". */
+ * The server will return then ID after storing it in a database marked as "pending".
+ * Returns an array: [status, id] */
 export async function getUniqueID() {
 	try {
-		const response = await fetch(`${serverURL}/api/unique-drawing-id`);
-		if (response.status === 503) return null;
-		const json = await response.json();
+		if (unique_id !== null) return ['OK', unique_id];
 
-		if (unique_id !== null) return unique_id;
+		const response = await fetch(`${serverURL}/api/unique-drawing-id`);
+
+		// Error
+		if (response.status === 500) return [response.status, await response.text()];
+
+		// Success
+		const json = await response.json();
 		unique_id = json;
-		return json;
+		return [response.status, json];
+
 	} catch (error) {
 		console.error(error);
 	}

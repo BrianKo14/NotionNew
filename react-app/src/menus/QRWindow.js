@@ -13,13 +13,14 @@ function QRWindow(props) {
 		async function generateQRCode() {
 
 			const uniqueId = await getUniqueID();
-			if (uniqueId === null) {
-				alert('Server is currently unavailable. Please try again later.');
+			console.log(uniqueId);
+			if (uniqueId[0] !== 200) {
+				alertError(uniqueId[1]);
 				props.setShowQR(false);
 				return;
 			}
 
-			const url = `${serverURL}/drawing?id=${uniqueId}`;
+			const url = `${serverURL}/drawing?id=${uniqueId[1]}`;
 
 			try {
 				const dataUri = await QRCode.toDataURL(url, { 
@@ -55,8 +56,22 @@ function QRWindow(props) {
 async function getDrawingAfterPolling(props) {
 	const dataURL = await getDrawing();
 
-	if (dataURL !== null)
-		props.insertImage(props.setBlocks, props.index, dataURL);
+	if (dataURL !== null) props.insertImage(props.setBlocks, props.index, dataURL);
+	else alertError('NULL_IMG');
+}
+
+function alertError(errorCode) {
+	switch (errorCode) {
+		case 'FULL':
+			alert('The server appears to have reached its maximum capacity. Please try again later.');
+			break;
+		case 'MAX_IP':
+			alert('You have reached the maximum number of concurrent requests for your IP.')
+			break;
+		default:
+			alert('There was a problem with the request. Please try again later.');
+			break;
+	}
 }
 
 export default QRWindow;
