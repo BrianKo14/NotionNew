@@ -45,25 +45,31 @@ export async function cancelDrawingRequest() {
 }
 
 /** Checks if the drawing is ready every POLL_INTERVAL milliseconds.
- * Runs 'callback' function when drawing is ready. 
+ * Runs 'accept' function when drawing is ready.
+ * Runs 'cancel' function if ID doesn't exist.
  * Polling is not the most efficient solution, but pertinent enough to the occasion. */
-export async function startPolling(callback) {
+export async function startPolling(accept, cancel) {
 	const poll = setInterval(async () => {
-		if (unique_id === null) {
+
+		// Check ID
+		const idResponse = await fetch(`${serverURL}/api/check-id?id=${unique_id}`);
+		const idExists = await idResponse.json();
+
+		if (idExists === false) {
 			clearInterval(poll);
-			return;
+			unique_id = null
+			cancel();
 		}
 
-		const response = await fetch(`${serverURL}/api/check-status?id=${unique_id}`);
-		const json = await response.json();
-		if (json === true) {
+		// Check status
+		const statusResponse = await fetch(`${serverURL}/api/check-status?id=${unique_id}`);
+		const status = await statusResponse.json();
+
+		if (status === true) {
 			clearInterval(poll);
-			callback();
+			accept();
 		}
-		else if (json === null) {
-			clearInterval(poll);
-			unique_id = null;
-		}
+
 	}, POLL_INTERVAL);
 }
 

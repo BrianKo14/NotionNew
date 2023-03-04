@@ -4,6 +4,9 @@ const express = require('express');
 
 const drawings = require('./drawings');
 
+/** Maximum requests made by an IP per minute */
+const MAX_PER_MIN = 100;
+
 const app = express();
 app.use(express.json({ limit: '50mb' })); // allow large JSON bodies
 
@@ -17,7 +20,7 @@ app.use((req, res, next) => {
 const rateLimit = require('express-rate-limit');
 const limiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
-	max: 70 // limit each IP to 60 requests per windowMs
+	max: MAX_PER_MIN // limit each IP to MAX_PER_MIN requests per windowMs
 });
 app.use(limiter);
 

@@ -3,6 +3,16 @@ const sqlite3 = require('sqlite3').verbose();
 
 const DB_PATH = './drawings_waitlist.db';
 
+/** Maximum number of elements in the database at any given time. */
+const MAX_TOTAL_REQUESTS = 1000;
+
+/** Maximum simultaneous requests made by the same user. */
+const MAX_REQUESTS_PER_IP = 3;
+
+/** Maximum minutes for a request to remain unfulfilled in the waitlist. */
+const MAX_MINUTES = 30;
+
+
 const db = new sqlite3.Database(DB_PATH);
 db.serialize(); // ensures that database operations are executed in a predictable order
 console.log('Database initialized.');
@@ -13,10 +23,6 @@ process.on('SIGINT', () => {
 	require('fs').unlinkSync(DB_PATH);
 	process.exit();
 });
-
-const MAX_TOTAL_REQUESTS = 1000;
-const MAX_REQUESTS_PER_IP = 3;
-
 
 /** Creates 'users' table in database.
  * 
@@ -29,7 +35,10 @@ const MAX_REQUESTS_PER_IP = 3;
 */
 exports.initializeDatabase = async function() {
 	const result = await db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, status BOOLEAN, date INTEGER, ip STRING, drawing BLOB)');
-	if (!result.error) console.log('Table created.')
+	if (!result.error) {
+		console.log('Table created.');
+		startCleanup();
+	}
 }
 
 
@@ -99,9 +108,20 @@ exports.maxIpReached = function(ip) {
 	return new Promise((resolve, reject) => {
 		db.get('SELECT COUNT(*) AS count FROM users WHERE ip = ?', [ip], (err, row) => {
 			if (err) console.log(err);
+			else resolve(row.count >= MAX_REQUESTS_PER_IP);
+		});
+	});
+}
+
+/** Starts an interval check-up that will remove old elements. */
+function startCleanup() {
+	setInterval(async () => {
+		db.all('SELECT * FROM users', (err, rows) => {
+			if (err) console.log(err);
 			else {
-				console.log(row.count >= MAX_REQUESTS_PER_IP);
-				resolve(row.count >= MAX_REQUESTS_PER_IP);
+				rows.forEach(row => {
+					if (Date.now() - row.date > MAX_MINUTES * 60 * 1000) deleteUser(row.id);
+				});
 			}
 		});
 	});

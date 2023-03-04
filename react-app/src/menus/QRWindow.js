@@ -12,17 +12,19 @@ function QRWindow(props) {
 	useEffect(() => {
 		async function generateQRCode() {
 
+			// Get ID
 			const uniqueId = await getUniqueID();
-			console.log(uniqueId);
 			if (uniqueId[0] !== 200) {
 				alertError(uniqueId[1]);
 				props.setShowQR(false);
 				return;
 			}
 
+			// Construct URL
 			const url = `${serverURL}/drawing?id=${uniqueId[1]}`;
 
 			try {
+				// Generate QR code
 				const dataUri = await QRCode.toDataURL(url, { 
 					width: 256, 
 					height: 256, 
@@ -31,7 +33,19 @@ function QRWindow(props) {
 				});
 				setQRCodeDataUri(dataUri);
 
-				startPolling(() => getDrawingAfterPolling(props));
+				// Start polling
+				startPolling(
+					// Accept drawing
+					() => getDrawingAfterPolling(props),
+
+					// Or cancel request
+					() => {
+						alertError('CANCEL');
+						props.setShowQR(false);
+						return;
+					}
+				);
+
 			} catch (error) {
 				console.error(error);
 			}
@@ -67,6 +81,9 @@ function alertError(errorCode) {
 			break;
 		case 'MAX_IP':
 			alert('You have reached the maximum number of concurrent requests for your IP.')
+			break;
+		case 'CANCEL':
+			alert('The request has been cancelled.');
 			break;
 		default:
 			alert('There was a problem with the request. Please try again later.');
