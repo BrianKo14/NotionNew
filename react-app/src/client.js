@@ -7,23 +7,24 @@ if (serverURL.includes('localhost')) serverURL = 'http://192.168.0.179:3001';
 
 const POLL_INTERVAL = 3000;
 
-var unique_id = null;
+var uniqueId = null;
 
 /** Requests server for assignment of a unique ID for this user.
  * The server will return then ID after storing it in a database marked as "pending".
- * Returns an array: [status, id] */
+ * Returns an array: [status, id] or [status, error] */
 export async function getUniqueID() {
 	try {
-		if (unique_id !== null) return ['OK', unique_id];
+		if (uniqueId !== null) return [200, uniqueId];
 
 		const response = await fetch(`${serverURL}/api/unique-drawing-id`);
 
 		// Error
-		if (response.status === 500) return [response.status, await response.text()];
+		if (response.status !== 200)
+			return [response.status, await response.text()];
 
 		// Success
 		const json = await response.json();
-		unique_id = json;
+		uniqueId = json;
 		return [response.status, json];
 
 	} catch (error) {
@@ -34,10 +35,10 @@ export async function getUniqueID() {
 /** Cancel request for drawing for last ID generated, iff it's still pending.
  * Will delete entry from waitlist */
 export async function cancelDrawingRequest() {
-	if (unique_id !== null) {
+	if (uniqueId !== null) {
 		try {
-			await fetch(`${serverURL}/api/cancel-request?id=${unique_id}`);
-			unique_id = null;
+			await fetch(`${serverURL}/api/cancel-request?id=${uniqueId}`);
+			uniqueId = null;
 		} catch (error) {
 			console.error(error);
 		}
@@ -52,17 +53,17 @@ export async function startPolling(accept, cancel) {
 	const poll = setInterval(async () => {
 
 		// Check ID
-		const idResponse = await fetch(`${serverURL}/api/check-id?id=${unique_id}`);
+		const idResponse = await fetch(`${serverURL}/api/check-id?id=${uniqueId}`);
 		const idExists = await idResponse.json();
 
 		if (idExists === false) {
 			clearInterval(poll);
-			unique_id = null
+			uniqueId = null
 			cancel();
 		}
 
 		// Check status
-		const statusResponse = await fetch(`${serverURL}/api/check-status?id=${unique_id}`);
+		const statusResponse = await fetch(`${serverURL}/api/check-status?id=${uniqueId}`);
 		const status = await statusResponse.json();
 
 		if (status === true) {
@@ -75,7 +76,7 @@ export async function startPolling(accept, cancel) {
 
 /** Fetches drawing URL data from database. */
 export async function getDrawing() {
-	const response = await fetch(`${serverURL}/api/get-drawing?id=${unique_id}`);
+	const response = await fetch(`${serverURL}/api/get-drawing?id=${uniqueId}`);
 	const text = await response.text();
 
 	return text;

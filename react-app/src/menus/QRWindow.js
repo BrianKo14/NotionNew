@@ -5,6 +5,13 @@ import '../css/QRWindow.css';
 import QRCode from 'qrcode';
 const { getUniqueID, startPolling, getDrawing, serverURL } = require('../client.js');
 
+const QR_STYLE = {
+	width: 256, 
+	height: 256, 
+	margin: 0,
+	color: { dark: '#000000', light: '#F7F7F5'}
+};
+
 function QRWindow(props) {
 
 	const [qrCodeDataUri, setQRCodeDataUri] = useState('');
@@ -25,12 +32,7 @@ function QRWindow(props) {
 
 			try {
 				// Generate QR code
-				const dataUri = await QRCode.toDataURL(url, { 
-					width: 256, 
-					height: 256, 
-					margin: 0,
-					color: { dark: '#000000', light: '#F7F7F5'}
-				});
+				const dataUri = await QRCode.toDataURL(url, QR_STYLE);
 				setQRCodeDataUri(dataUri);
 
 				// Start polling
@@ -40,7 +42,6 @@ function QRWindow(props) {
 
 					// Or cancel request
 					() => {
-						alertError('CANCEL');
 						props.setShowQR(false);
 						return;
 					}
@@ -70,7 +71,8 @@ function QRWindow(props) {
 async function getDrawingAfterPolling(props) {
 	const dataURL = await getDrawing();
 
-	if (dataURL !== null) props.insertImage(props.setBlocks, props.index, dataURL);
+	if (dataURL !== null)
+		props.insertImage(props.setBlocks, props.index, dataURL);
 	else alertError('NULL_IMG');
 }
 
@@ -81,9 +83,6 @@ function alertError(errorCode) {
 			break;
 		case 'MAX_IP':
 			alert('You have reached the maximum number of concurrent requests for your IP.')
-			break;
-		case 'CANCEL':
-			alert('The request has been cancelled.');
 			break;
 		default:
 			alert('There was a problem with the request. Please try again later.');

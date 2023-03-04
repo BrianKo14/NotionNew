@@ -10,7 +10,7 @@ const MAX_TOTAL_REQUESTS = 1000;
 const MAX_REQUESTS_PER_IP = 3;
 
 /** Maximum minutes for a request to remain unfulfilled in the waitlist. */
-const MAX_MINUTES = 30;
+const MAX_MINUTES = 90;
 
 
 const db = new sqlite3.Database(DB_PATH);
