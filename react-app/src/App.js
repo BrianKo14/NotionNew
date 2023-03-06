@@ -78,7 +78,7 @@ function Document() {
 
   const [showMenu, setShowMenu] = useState(false);
   const [showQR, setShowQR] = useState(false);
-  const [showHeaderButtons, setShowHeaderButtons] = useState(true);
+  const [showHeaderButtons, setShowHeaderButtons] = useState(false);
 
   // Update selection when 'blocks' is updated
   useEffect(() => {

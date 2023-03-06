@@ -2,7 +2,7 @@
 export var serverURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
 
 // DEBUG: local IP address
-if (serverURL.includes('localhost')) serverURL = 'http://192.168.0.179:3001'; 
+if (serverURL.includes('localhost')) serverURL = 'http://192.168.0.146:3001'; 
 
 
 const POLL_INTERVAL = 3000;

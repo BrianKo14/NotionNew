@@ -48,6 +48,8 @@ const poll = setInterval(async () => {
 function saveDrawing() {
 	clearInterval(poll);
 
+	showModal('Saving drawing...');
+
 	// Render
 	const data = fabricCanvas.toDataURL();
 
