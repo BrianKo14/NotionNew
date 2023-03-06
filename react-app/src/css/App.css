@@ -47,6 +47,21 @@
   height: 30vh;
 }
 
+/* Header */
+
+#page-header {
+  width: 100%;
+  height: 100px;
+}
+
+#page-header::before {
+  position: absolute;
+  width: 110%;
+  height: 120%;
+  transform: translate(-10%, -40%);
+  background-color: rgba(0, 0, 0, 0.163);
+}
+
 #page-icon {
   width: 78px;
   float: left;
@@ -59,11 +74,28 @@
 
 #page-icon:hover { background-color: rgba(0, 0, 0, 0.062); }
 
+#header-buttons {
+  position: absolute;
+  left: 0;
+  top: 100px;
+
+  cursor: pointer;
+	user-select: none;
+  user-drag: none; -webkit-user-drag: none;
+}
+
+#header-button-1 { width: 100px; }
+#header-button-2 { width: 130px; }
+
+#header-buttons img { border-radius: 5px;  }
+#header-buttons img:hover { background-color: rgba(0, 0, 0, 0.062); }
+
+
 .block {
   position: relative;
   display: inline-block;
   width: 100%; 
-  top: 30px;
+  top: 50px;
   margin-bottom: 14px;
 
 }
@@ -196,7 +228,6 @@
   left: 48px;
   transform: translateY(-50%);
 
-  /* border-radius: 3px; */
   cursor: pointer;
 
   font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",

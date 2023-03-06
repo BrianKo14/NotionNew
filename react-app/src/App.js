@@ -9,6 +9,8 @@ import static_navigationbar_left from './media/static-navigationbar-left.png';
 import page_icon from './media/page-icon.png';
 import add_button from './media/add-button.png';
 import drag_button from './media/drag-button.png';
+import header_button_1 from './media/header_button_1.png';
+import header_button_2 from './media/header_button_2.png';
 
 // Default data imports
 import FONTS from './data/fonts.json';
@@ -76,6 +78,7 @@ function Document() {
 
   const [showMenu, setShowMenu] = useState(false);
   const [showQR, setShowQR] = useState(false);
+  const [showHeaderButtons, setShowHeaderButtons] = useState(true);
 
   // Update selection when 'blocks' is updated
   useEffect(() => {
@@ -86,7 +89,19 @@ function Document() {
   return (
     <div id="document">
       {/* Header */}
-      <img id="page-icon" src={page_icon} />
+      <div id="page-header"
+          onMouseEnter={() => setShowHeaderButtons(true)}
+          onMouseLeave={() => setShowHeaderButtons(false)}
+      >
+        <img id="page-icon" src={page_icon} />
+
+        { showHeaderButtons ? 
+          <div id="header-buttons">
+            <img id="header-button-1" src={header_button_1} />
+            <img id="header-button-2" src={header_button_2} />
+          </div>
+        : null }
+      </div>
 
       {/* Body */} {
         blocks.map((box, index) => {

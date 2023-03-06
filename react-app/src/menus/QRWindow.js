@@ -20,15 +20,15 @@ function QRWindow(props) {
 		async function generateQRCode() {
 
 			// Get ID
-			const uniqueId = await getUniqueID();
-			if (uniqueId[0] !== 200) {
-				alertError(uniqueId[1]);
+			const [status, id] = await getUniqueID();
+			if (status !== 200) {
+				alertError(id);
 				props.setShowQR(false);
 				return;
 			}
 
 			// Construct URL
-			const url = `${serverURL}/drawing?id=${uniqueId[1]}`;
+			const url = `${serverURL}/drawing?id=${id}`;
 
 			try {
 				// Generate QR code
