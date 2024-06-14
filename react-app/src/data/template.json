@@ -2,7 +2,7 @@
 	{"type": "title", "text": "Brave New Notion"},
 	{"type": "paragraph", "text": ""},
 	{"type": "heading1", "text": "This is not Notion."},
-	{"type": "paragraph", "text": "You will find that you can't change the page icon, and the menu on top is merely a static image. Things don't fade in and out, they just pop. A counterfeit investigator may conclude this is a fake. It’s like a house with doors that won’t open and pictures for windows."},
+	{"type": "paragraph", "text": "You will find that you can't change the page icon, and the menu on top is merely a static image. Things don't fade in and out, they just pop. A counterfeit expert may conclude this is a fake. It’s like a house with doors that won’t open and pictures for windows."},
 	{"type": "paragraph", "text": "I built this as a demonstration. "},
 	{"type": "heading3", "text": "It comes with a brand-new feature! 👏"},
 	{"type": "paragraph", "text": "Try adding a new block and typing ‘/’ to see the list of commands."},
@@ -26,7 +26,7 @@
 	{
 		"type": "callout",
 		"text": "My resumé",
-		"link": "https://notionnew-images.s3.amazonaws.com/resume-apr-30-optim.jpg",
+		"link": "https://notionnew-images.s3.amazonaws.com/Resume_May_2024_2.jpg",
 		"image": "https://notionnew-images.s3.amazonaws.com/paperclip.png"
 	},
 	{"type": "paragraph", "text": ""},

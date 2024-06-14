@@ -1,0 +1,16 @@
+option_settings:
+  aws:elasticbeanstalk:environment:proxy:nginx:
+    ssl_protocols: "TLSv1.2 TLSv1.3"
+    ssl_prefer_server_ciphers: "true"
+files:
+  "/etc/nginx/conf.d/ssl.conf":
+    mode: "000644"
+    owner: "root"
+    group: "root"
+    content: |
+      # Redirect HTTP to HTTPS
+      server {
+        listen 80;
+        server_name _;
+        return 301 https://$host$request_uri;
+      }
