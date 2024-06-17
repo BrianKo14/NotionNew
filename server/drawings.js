@@ -26,7 +26,7 @@ process.on('SIGINT', () => {
 
 /** Creates 'users' table in database.
  * 
- * The table has three columns:
+ * The table has five columns:
  * - id: unique user ID
  * - status: TRUE if drawing has been received, FALSE if drawing is still expected
  * - date: number of milliseconds elapsed since Jan 1 1970
