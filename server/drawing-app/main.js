@@ -13,7 +13,6 @@ fabricCanvas.setWidth(window.innerWidth - 60);
 fabricCanvas.setHeight(window.innerHeight - 390);
 
 
-
 /** Show modal overlay with some given text */
 function showModal(text) {
 	document.getElementById('placeholder').style.display = 'none';
@@ -51,7 +50,8 @@ function saveDrawing() {
 	showModal('Saving...');
 
 	// Render
-	const data = fabricCanvas.toDataURL();
+	const trimmed = trimCanvasY(canvas);
+	const data = trimmed.toDataURL();
 
 	// POST to server
 	fetch('/api/save-drawing', {
@@ -66,6 +66,7 @@ function saveDrawing() {
 	})
 	.then(res => {
 		if (res.status === 200) showModal('Drawing saved!');
+		clearInterval(poll);
 	})
 	.catch(err => {
 		console.error(err);
@@ -85,3 +86,44 @@ function setColor(el, color) {
 	el.classList.add('selected');
 	lastElement = el;
 }
+
+/** Trim around canvas blank spaces along the y-axis */
+function trimCanvasY(canvas) {
+	const ctx = canvas.getContext('2d');
+	const copy = document.createElement('canvas').getContext('2d');
+
+	const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	const bound = {
+		top: null,
+		bottom: null
+	};
+	let x, y;
+
+	for (y = 0; y < canvas.height; y++) {
+		for (x = 0; x < canvas.width; x++) {
+			const i = (y * canvas.width + x) * 4;
+			if (pixels.data[i + 3] !== 0) {
+				if (bound.top === null) bound.top = y;
+				if (bound.bottom === null) bound.bottom = y;
+
+				bound.top = Math.min(bound.top, y);
+				bound.bottom = Math.max(bound.bottom, y);
+			}
+		}
+	}
+
+	// If no non-transparent pixels were found, return the original canvas
+	if (bound.top === null || bound.bottom === null) {
+		return canvas;
+	}
+
+	const trimHeight = bound.bottom - bound.top + 1;
+	const trimmed = ctx.getImageData(0, bound.top, canvas.width, trimHeight);
+
+	copy.canvas.width = canvas.width;
+	copy.canvas.height = trimHeight;
+	copy.putImageData(trimmed, 0, 0);
+
+	return copy.canvas;
+}
+
