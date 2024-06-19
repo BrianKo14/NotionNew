@@ -92,38 +92,47 @@ function trimCanvasY(canvas) {
 	const ctx = canvas.getContext('2d');
 	const copy = document.createElement('canvas').getContext('2d');
 
-	const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
-	const bound = {
-		top: null,
-		bottom: null
-	};
-	let x, y;
+	const width = canvas.width;
+	const height = canvas.height;
+	const pixels = ctx.getImageData(0, 0, width, height).data;
+	let top = -1;
+	let bottom = -1;
 
-	for (y = 0; y < canvas.height; y++) {
-		for (x = 0; x < canvas.width; x++) {
-			const i = (y * canvas.width + x) * 4;
-			if (pixels.data[i + 3] !== 0) {
-				if (bound.top === null) bound.top = y;
-				if (bound.bottom === null) bound.bottom = y;
-
-				bound.top = Math.min(bound.top, y);
-				bound.bottom = Math.max(bound.bottom, y);
+	// Scan for the top boundary
+	for (let y = 0; y < height; y++) {
+		for (let x = 0; x < width; x++) {
+			if (pixels[(y * width + x) * 4 + 3] !== 0) {
+				top = y;
+				break;
 			}
 		}
+		if (top !== -1) break;
+	}
+
+	// Scan for the bottom boundary
+	for (let y = height - 1; y >= 0; y--) {
+		for (let x = 0; x < width; x++) {
+			if (pixels[(y * width + x) * 4 + 3] !== 0) {
+				bottom = y;
+				break;
+			}
+		}
+		if (bottom !== -1) break;
 	}
 
 	// If no non-transparent pixels were found, return the original canvas
-	if (bound.top === null || bound.bottom === null) {
+	if (top === -1 || bottom === -1) {
 		return canvas;
 	}
 
-	const trimHeight = bound.bottom - bound.top + 1;
-	const trimmed = ctx.getImageData(0, bound.top, canvas.width, trimHeight);
+	const trimHeight = bottom - top + 1;
+	const trimmed = ctx.getImageData(0, top, width, trimHeight);
 
-	copy.canvas.width = canvas.width;
+	copy.canvas.width = width;
 	copy.canvas.height = trimHeight;
 	copy.putImageData(trimmed, 0, 0);
 
 	return copy.canvas;
 }
+
 
