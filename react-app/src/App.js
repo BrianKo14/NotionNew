@@ -132,6 +132,7 @@ function Block(props) {
     if (window.dragClone) {
       window.dragClone.style.top = mousePos.y - 14 + "px";
       window.dragClone.style.left = mousePos.x + 14 + "px";
+
       getCurrentlyHovered(ref.current.children[0], mousePos, props.index);
     } else {
       ref.current.children[0].parentElement.classList.remove("hover-line"); 

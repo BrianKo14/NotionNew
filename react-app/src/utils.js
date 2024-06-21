@@ -69,6 +69,7 @@ export function moveBlock(setBlocks, index1, index2) {
 }
 
 export function handleDragStart(e, index, setBlocks) {
+  e.preventDefault();
   if (window.dragClone) return;
 
   // Create semi-transparent version of block to be displayed while dragging
@@ -81,8 +82,9 @@ export function handleDragStart(e, index, setBlocks) {
   dragImage.style.left = "-10000px";
   dragImage.children[0].style.width = block.children[0].offsetWidth + "px";
   dragImage.style.opacity = 0.5;
-  window.dragClone = dragImage;
+
   document.body.appendChild(dragImage); 
+  window.dragClone = dragImage;
 
   // Pass on index of block to be moved
   currentlyDragging = index;
