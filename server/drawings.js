@@ -48,12 +48,19 @@ exports.initializeDatabase = async function() {
 /** Adds new user to the waitlist. Will replace existing instances of same user. */
 exports.addUser = async function(id, ip) {
 	const date = Date.now();
+
+	id = sanitizeID(id);
+	ip = sanitizeIP(ip);
+	
 	const result = await db.run('INSERT OR REPLACE INTO users VALUES (?, ?, ?, ?, ?)' , [id, false, date, ip, null]);
 	if (result.error) console.log(result.error);
 }
 
 /** Removes user from waitlist when drawing is no longer expected. */
 const deleteUser = async function(id) {
+
+	id = sanitizeID(id);
+
 	const result = await db.run('DELETE FROM users WHERE id = ?', [id]);
 	if (result.error) console.log(result.error);
 }
@@ -61,6 +68,10 @@ exports.deleteUser = deleteUser;
 
 /** Updates blob when drawing has been received. */
 exports.updateUser = async function(id, drawing) {
+	
+	id = sanitizeID(id);
+	drawing = sanitizeDrawing(drawing);
+
 	const result = await db.run('UPDATE users SET status = ?, drawing = ? WHERE id = ?', [true, drawing, id]);
 	if (result.error) console.log(result.error);
 }
@@ -73,6 +84,9 @@ exports.updateUser = async function(id, drawing) {
  * Returns FALSE if drawing is still expected.
  * Returns NULL if ID doesn't exist. */
 exports.checkStatus = function(id) {
+	
+	id = sanitizeID(id);
+
 	return new Promise((resolve, reject) => {
 		db.get('SELECT status FROM users WHERE id = ?', [id], (err, row) => {
 			if (err) console.log(err);
@@ -84,6 +98,9 @@ exports.checkStatus = function(id) {
 
 /** Returns TRUE iff ID exists in database */
 exports.checkId = function(id) {
+	
+	id = sanitizeID(id);
+
 	return new Promise((resolve, reject) => {
 		db.get('SELECT id FROM users WHERE id = ?', [id], (err, row) => {
 			if (err) console.log(err);
@@ -105,6 +122,9 @@ exports.isFull = function() {
 
 /** Returns TRUE iff this IP has made more than MAX_REQUESTS_PER_IP requests */
 exports.maxIpReached = function(ip) {
+
+	ip = sanitizeIP(ip);
+
 	return new Promise((resolve, reject) => {
 		db.get('SELECT COUNT(*) AS count FROM users WHERE ip = ?', [ip], (err, row) => {
 			if (err) console.log(err);
@@ -135,6 +155,9 @@ function startCleanup() {
 /** Returns drawing blob if ID matches status TRUE.
  * Returns NULL if ID doesn't exist. */
 exports.getDrawing = function(id) {
+
+	id = sanitizeID(id);
+
 	return new Promise((resolve, reject) => {
 		db.get('SELECT drawing FROM users WHERE id = ?', [id], (err, row) => {
 			if (err) console.log(err);
@@ -145,4 +168,31 @@ exports.getDrawing = function(id) {
 			}
 		});
 	});
+}
+
+
+
+
+/* --- SANITIZATION --- */
+
+function sanitizeID(id) {
+	id = parseInt(id);
+	if (isNaN(id)) return null;
+	return id;
+}
+
+function sanitizeDrawing(drawing) {
+	const base64Regex = /^data:image\/(png|jpeg|jpg);base64,([A-Za-z0-9+/=]+)$/;
+	if (!base64Regex.test(drawing)) return null;
+	return drawing;
+}
+
+function sanitizeIP(ip) {
+	const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+	const ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}([0-9a-fA-F]{1,4}|:)$/;
+	const ipv6MappedIpv4Regex = /^::ffff:(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
+    
+	if (ipv4Regex.test(ip) || ipv6Regex.test(ip) || ipv6MappedIpv4Regex.test(ip)) {
+	    return ip;
+	} else return null;
 }
