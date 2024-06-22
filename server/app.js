@@ -8,7 +8,9 @@ const drawings = require('./drawings');
 const MAX_PER_MIN = 100;
 
 const app = express();
-app.use(express.json({ limit: '50mb' })); // allow large JSON bodies
+
+app.use(express.json({ limit: '3mb' }));
+app.use(express.urlencoded({ limit: '3mb', extended: true }));
 
 // DEBUG: Set the 'Access-Control-Allow-Origin' header to allow requests from a different domain
 app.use((req, res, next) => {
