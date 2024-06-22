@@ -66,7 +66,6 @@ function saveDrawing() {
 	})
 	.then(res => {
 		if (res.status === 200) showModal('Drawing saved!');
-		clearInterval(poll);
 	})
 	.catch(err => {
 		console.error(err);
