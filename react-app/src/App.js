@@ -4,10 +4,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 // Media imports
-import {
-  static_navigationbar_right, static_navigationbar_left, page_icon,
-  add_button, drag_button, header_button_1, header_button_2
-} from './media';
+import static_navigationbar_right from './media/static-navigationbar-right.png';
+import static_navigationbar_left from './media/static-navigationbar-left.png';
+import page_icon from './media/page-icon.png';
+import add_button from './media/add-button.png';
+import drag_button from './media/drag-button.png';
+import header_button_1 from './media/header_button_1.png';
+import header_button_2 from './media/header_button_2.png';
 
 // Default data imports
 import FONTS from './data/fonts.json';

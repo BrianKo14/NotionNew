@@ -144,7 +144,7 @@ function startCleanup() {
 				});
 			}
 		});
-	});
+	}, 60000);
 }
 
 
