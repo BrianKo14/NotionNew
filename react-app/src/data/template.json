@@ -10,6 +10,7 @@
 	{"type": "heading2", "text": "Behind the curtain"},
 	{"type": "paragraph", "text": "I built the front-end you're currently seeing using React. The server-side runs on Node.js, which is hosted on an AWS Elastic Beanstalk. The drawing app is plain JavaScript, which Express serves after queuing each request in an SQLite database. The QR code is generated together with a unique ID that stands for user credentials. It's not meant to be more complicated than it needs to be."},
 	{"type": "image", "image": "https://notionnew-images.s3.amazonaws.com/mindmap.png"},
+	{"type": "paragraph", "text": "The transition to a different device is to leverage the intuitive touch interface of a mobile app, which allows for better drawing capabilities."},
 	{"type": "paragraph", "text": ""},
 	{"type": "paragraph", "text": "You will find the code right here:"},
 	{
@@ -26,7 +27,7 @@
 	{
 		"type": "callout",
 		"text": "My resumé",
-		"link": "https://notionnew-images.s3.amazonaws.com/Resume_June_2024.jpg",
+		"link": "https://notionnew-images.s3.amazonaws.com/Resume_June_2024_4.jpg",
 		"image": "https://notionnew-images.s3.amazonaws.com/paperclip.png"
 	},
 	{"type": "paragraph", "text": ""},
