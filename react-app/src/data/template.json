@@ -19,6 +19,7 @@
 		"link": "https://github.com/BrianKo14/NotionNew",
 		"image": "https://notionnew-images.s3.amazonaws.com/github-logo.png"
 	},
+	{"type": "paragraph", "text": "Disclaimer: this project predates the release of AI coding tools."},
 	{"type": "paragraph", "text": ""},
 	{"type": "heading1", "text": "About me"},
 	{"type": "paragraph", "text": "My name is Brian Kovo. I’m a computer science undergrad at the University of Buenos Aires."},
@@ -27,7 +28,7 @@
 	{
 		"type": "callout",
 		"text": "My resumé",
-		"link": "https://notionnew-images.s3.amazonaws.com/Resume_June_2024_4.jpg",
+		"link": "https://brianko14.github.io/resume-website/resume.pdf",
 		"image": "https://notionnew-images.s3.amazonaws.com/paperclip.png"
 	},
 	{"type": "paragraph", "text": ""},
@@ -35,8 +36,8 @@
 	{"type": "paragraph", "text": ""},
 	{
 		"type": "callout",
-		"text": "brian.ilank@gmail.com",
-		"link": "mailto:brian.ilank@gmail.com",
+		"text": "briankovo@gmail.com",
+		"link": "mailto:briankovo@gmail.com",
 		"image": "https://notionnew-images.s3.amazonaws.com/envelope.png"
 	}
 ]
