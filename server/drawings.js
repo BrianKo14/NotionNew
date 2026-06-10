@@ -1,7 +1,10 @@
 
 const sqlite3 = require('sqlite3').verbose();
 
-const DB_PATH = './drawings_waitlist.db';
+const DB_PATH = process.env.NODE_ENV === 'production'
+  ? '/data/drawings_waitlist.db'
+  : './drawings_waitlist.db';
+
 
 /** Maximum number of elements in the database at any given time. */
 const MAX_TOTAL_REQUESTS = 1000;
